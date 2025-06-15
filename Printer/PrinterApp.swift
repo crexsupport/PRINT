@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct PrinterApp: App {
+    @StateObject private var scannerManager = ScannerManager()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
+                .environmentObject(scannerManager)
         }
     }
 }
