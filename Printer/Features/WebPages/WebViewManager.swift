@@ -27,6 +27,9 @@ class WebViewManager: NSObject, ObservableObject {
         webView = WKWebView(frame: .zero, configuration: config)
         webView?.navigationDelegate = self
         webView?.allowsBackForwardNavigationGestures = true
+        
+        // Set default user agent to mobile
+        setMobileUserAgent()
     }
     
     func loadDefaultURL() {
@@ -67,13 +70,36 @@ class WebViewManager: NSObject, ObservableObject {
         webView?.reload()
     }
     
+    func toggleDesktopMode(_ isDesktop: Bool) {
+        guard let webView = webView else { return }
+        
+        if isDesktop {
+            setDesktopUserAgent()
+        } else {
+            setMobileUserAgent()
+        }
+        
+        // Reload current page with new user agent
+        webView.reload()
+    }
+    
+    private func setMobileUserAgent() {
+        let mobileUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1"
+        webView?.customUserAgent = mobileUserAgent
+    }
+    
+    private func setDesktopUserAgent() {
+        let desktopUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15"
+        webView?.customUserAgent = desktopUserAgent
+    }
+    
     func printCurrentPage() {
         guard let webView = webView else { return }
         
         let printController = UIPrintInteractionController.shared
         let printInfo = UIPrintInfo(dictionary: nil)
         printInfo.outputType = .general
-        printInfo.jobName = pageTitle.isEmpty ? "Web Page" : pageTitle
+        printInfo.jobName = pageTitle.isEmpty ? "Página Web" : pageTitle
         
         printController.printInfo = printInfo
         printController.printFormatter = webView.viewPrintFormatter()
@@ -98,7 +124,7 @@ class WebViewManager: NSObject, ObservableObject {
                     self.savePDFToDocuments(data: data)
                 }
             case .failure(let error):
-                print("PDF generation failed: \(error)")
+                print("Generación de PDF falló: \(error)")
             }
         }
     }
@@ -106,14 +132,14 @@ class WebViewManager: NSObject, ObservableObject {
     private func savePDFToDocuments(data: Data) {
         // Save PDF to documents directory
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let pdfURL = documentsPath.appendingPathComponent("webpage_\(Date().timeIntervalSince1970).pdf")
+        let pdfURL = documentsPath.appendingPathComponent("pagina_web_\(Date().timeIntervalSince1970).pdf")
         
         do {
             try data.write(to: pdfURL)
-            print("PDF saved to: \(pdfURL)")
+            print("PDF guardado en: \(pdfURL)")
             // Show success message or add to printables
         } catch {
-            print("Failed to save PDF: \(error)")
+            print("Error al guardar PDF: \(error)")
         }
     }
 }
