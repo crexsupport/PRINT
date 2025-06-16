@@ -116,7 +116,7 @@ struct PhotoPermissionView: View {
                     } else {
                         // Show permission request options when not determined
                         Button("Limited Access...") {
-                            viewModel.requestPhotoLibraryPermission()
+                            viewModel.requestPhotoPermission()
                         }
                         .font(.body)
                         .foregroundColor(.blue)
@@ -125,7 +125,7 @@ struct PhotoPermissionView: View {
                         .background(Color.clear)
                         
                         Button("Allow Full Access") {
-                            viewModel.requestPhotoLibraryPermission()
+                            viewModel.requestPhotoPermission()
                         }
                         .font(.body)
                         .foregroundColor(.blue)

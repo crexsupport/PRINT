@@ -28,7 +28,7 @@ struct TextInputToolbar: View {
                     Button("Print") {
                         onDismissKeyboard()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            viewModel.proceedToPreview()
+                            viewModel.showPreview()
                         }
                     }
                     .font(.system(size: 17, weight: .medium))

@@ -200,6 +200,7 @@ enum BatchPrintStep {
 // MARK: - Main BatchPrintView (Orchestrator)
 struct BatchPrintView: View {
     @StateObject private var viewModel = BatchPrintViewModel()
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationView {
@@ -226,8 +227,11 @@ struct BatchPrintView: View {
                             Image(systemName: "chevron.backward")
                         }
                     } else {
-                        Image(systemName: "crown.fill")
-                            .foregroundColor(.orange)
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.backward")
+                        }
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

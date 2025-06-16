@@ -6,16 +6,19 @@ struct SelectedPhotosCarouselView: View {
     @Environment(\.dismiss) var dismiss
     @State private var currentIndex = 0
     @State private var showOverlay = true
-    @State private var localSelectedPhotos: [PhotoItem] = []
+    
+    private var selectedPhotos: [PhotoItem] {
+        viewModel.allPhotos.filter { $0.isSelected }
+    }
     
     var body: some View {
         ZStack {
             // Main carousel area
-            if !localSelectedPhotos.isEmpty {
+            if !selectedPhotos.isEmpty {
                 // Carousel of selected photos
                 TabView(selection: $currentIndex) {
-                    ForEach(0..<localSelectedPhotos.count, id: \.self) { index in
-                        SelectedPhotoCarouselItem(photo: localSelectedPhotos[index], viewModel: viewModel)
+                    ForEach(0..<selectedPhotos.count, id: \.self) { index in
+                        SelectedPhotoCarouselItem(photo: selectedPhotos[index], viewModel: viewModel)
                             .tag(index)
                     }
                 }
@@ -25,7 +28,7 @@ struct SelectedPhotosCarouselView: View {
                         showOverlay.toggle()
                     }
                 }
-                .id(localSelectedPhotos.count) // Force refresh when count changes
+                .id(selectedPhotos.count) // Force refresh when count changes
             } else {
                 // Empty state
                 VStack {
@@ -94,12 +97,12 @@ struct SelectedPhotosCarouselView: View {
                             }
                             .disabled(currentIndex == 0)
                             
-                            Text("\(currentIndex + 1) / \(localSelectedPhotos.count)")
+                            Text("\(currentIndex + 1) / \(selectedPhotos.count)")
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.white)
                             
                             Button(action: {
-                                if currentIndex < localSelectedPhotos.count - 1 {
+                                if currentIndex < selectedPhotos.count - 1 {
                                     withAnimation {
                                         currentIndex += 1
                                     }
@@ -107,9 +110,9 @@ struct SelectedPhotosCarouselView: View {
                             }) {
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(currentIndex < localSelectedPhotos.count - 1 ? .white : .gray)
+                                    .foregroundColor(currentIndex < selectedPhotos.count - 1 ? .white : .gray)
                             }
-                            .disabled(currentIndex >= localSelectedPhotos.count - 1)
+                            .disabled(currentIndex >= selectedPhotos.count - 1)
                         }
                         
                         Spacer()
@@ -117,20 +120,20 @@ struct SelectedPhotosCarouselView: View {
                         // Done button with badge (same as PhotoDetailView)
                         HStack(spacing: 8) {
                             // Badge with number of selections (left side)
-                            if !localSelectedPhotos.isEmpty {
+                            if !selectedPhotos.isEmpty {
                                 ZStack {
                                     Circle()
                                         .fill(Color.blue)
                                         .frame(width: 20, height: 20)
                                     
-                                    Text("\(localSelectedPhotos.count)")
+                                    Text("\(selectedPhotos.count)")
                                         .font(.system(size: 12, weight: .bold))
                                         .foregroundColor(.white)
                                 }
                             }
                             
                             Button("Done") {
-                                if !localSelectedPhotos.isEmpty {
+                                if !selectedPhotos.isEmpty {
                                     viewModel.currentStep = .photoPreview
                                 }
                                 dismiss()
@@ -149,41 +152,33 @@ struct SelectedPhotosCarouselView: View {
         }
         .ignoresSafeArea(.all)
         .onAppear {
-            // Initialize local state with viewModel data
-            localSelectedPhotos = viewModel.selectedPhotos
             // Ensure currentIndex is within bounds
-            if currentIndex >= localSelectedPhotos.count {
-                currentIndex = max(0, localSelectedPhotos.count - 1)
+            if currentIndex >= selectedPhotos.count {
+                currentIndex = max(0, selectedPhotos.count - 1)
             }
         }
-        .onChange(of: viewModel.selectedPhotos) { newSelectedPhotos in
-            // Update local state when viewModel changes
-            localSelectedPhotos = newSelectedPhotos
-            
-            // Adjust currentIndex if needed
-            if currentIndex >= localSelectedPhotos.count {
-                currentIndex = max(0, localSelectedPhotos.count - 1)
+        .onChange(of: viewModel.allPhotos) { oldValue, newValue in
+            // Adjust currentIndex if needed when selection changes
+            if currentIndex >= selectedPhotos.count {
+                currentIndex = max(0, selectedPhotos.count - 1)
             }
         }
     }
     
     private func removeCurrentPhoto() {
-        guard currentIndex < localSelectedPhotos.count else { return }
+        guard currentIndex < selectedPhotos.count else { return }
         
-        let photoToRemove = localSelectedPhotos[currentIndex]
+        let photoToRemove = selectedPhotos[currentIndex]
         
-        // Remove from viewModel (this will trigger onChange)
+        // Remove from viewModel (this will toggle the selection)
         viewModel.togglePhotoSelection(photoToRemove)
         
-        // Immediately update local state for instant UI feedback
-        localSelectedPhotos.removeAll { $0.id == photoToRemove.id }
-        
         // Adjust currentIndex if needed
-        if localSelectedPhotos.isEmpty {
+        if selectedPhotos.isEmpty {
             dismiss()
-        } else if currentIndex >= localSelectedPhotos.count {
+        } else if currentIndex >= selectedPhotos.count {
             withAnimation {
-                currentIndex = max(0, localSelectedPhotos.count - 1)
+                currentIndex = max(0, selectedPhotos.count - 1)
             }
         }
     }

@@ -9,13 +9,25 @@ import SwiftUI
 import WebKit
 
 struct WebView: UIViewRepresentable {
-    let webViewManager: WebViewManager
+    @ObservedObject var webViewManager: WebViewManager
     
     func makeUIView(context: Context) -> WKWebView {
-        return webViewManager.webView ?? WKWebView()
+        let webView = WKWebView()
+        
+        // Configurar el WebView
+        webView.allowsBackForwardNavigationGestures = true
+        webView.scrollView.isScrollEnabled = true
+        
+        // Establecer la relación con el manager
+        webViewManager.setWebView(webView)
+        
+        return webView
     }
     
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        // Updates handled by WebViewManager
+        // Asegurar que el manager tiene la referencia correcta
+        if webViewManager.webView !== uiView {
+            webViewManager.setWebView(uiView)
+        }
     }
 }

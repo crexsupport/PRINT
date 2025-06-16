@@ -9,38 +9,40 @@ import SwiftUI
 import WebKit
 
 class WebViewManager: NSObject, ObservableObject {
-    @Published var urlString = "https://www.google.com"
-    @Published var isLoading = false
+    @Published var url: URL = URL(string: "https://www.google.com")!
     @Published var canGoBack = false
     @Published var canGoForward = false
+    @Published var isLoading = false
+    @Published var urlString = "https://www.google.com"
     @Published var pageTitle = ""
-    
-    var webView: WKWebView?
-    
+    @Published var isDesktopMode = false
+
+    weak var webView: WKWebView?
+
     override init() {
         super.init()
-        setupWebView()
     }
-    
-    private func setupWebView() {
-        let config = WKWebViewConfiguration()
-        webView = WKWebView(frame: .zero, configuration: config)
-        webView?.navigationDelegate = self
-        webView?.allowsBackForwardNavigationGestures = true
+
+    func setWebView(_ webView: WKWebView) {
+        self.webView = webView
+        webView.navigationDelegate = self
         
-        // Set default user agent to mobile
-        setMobileUserAgent()
+        // Configurar User Agent inicial
+        updateUserAgent()
+        
+        // Cargar la URL inicial automáticamente
+        DispatchQueue.main.async {
+            self.loadURL(self.urlString)
+        }
     }
-    
-    func loadDefaultURL() {
-        loadURL()
-    }
-    
+
     func loadURL() {
-        guard let webView = webView else { return }
-        
+        loadURL(urlString)
+    }
+
+    func loadURL(_ urlString: String) {
         var urlToLoad = urlString
-        
+
         // Add https:// if no protocol specified
         if !urlToLoad.hasPrefix("http://") && !urlToLoad.hasPrefix("https://") {
             // Check if it looks like a URL
@@ -51,72 +53,81 @@ class WebViewManager: NSObject, ObservableObject {
                 urlToLoad = "https://www.google.com/search?q=" + urlToLoad.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
         }
-        
+
         if let url = URL(string: urlToLoad) {
-            let request = URLRequest(url: url)
-            webView.load(request)
+            DispatchQueue.main.async {
+                self.url = url
+                self.urlString = urlToLoad
+                self.webView?.load(URLRequest(url: url))
+            }
         }
     }
     
+    func toggleDesktopMode() {
+        isDesktopMode.toggle()
+        updateUserAgent()
+        reload()
+    }
+    
+    private func updateUserAgent() {
+        guard let webView = webView else { return }
+        
+        if isDesktopMode {
+            // Desktop User Agent (Safari en macOS)
+            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
+        } else {
+            // Mobile User Agent (Safari en iOS) - o nil para usar el por defecto
+            webView.customUserAgent = nil
+        }
+    }
+
     func goBack() {
         webView?.goBack()
     }
-    
+
     func goForward() {
         webView?.goForward()
     }
-    
+
     func reload() {
         webView?.reload()
     }
-    
-    func toggleDesktopMode(_ isDesktop: Bool) {
+
+    func printWebPage() {
         guard let webView = webView else { return }
-        
-        if isDesktop {
-            setDesktopUserAgent()
-        } else {
-            setMobileUserAgent()
-        }
-        
-        // Reload current page with new user agent
-        webView.reload()
-    }
-    
-    private func setMobileUserAgent() {
-        let mobileUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1"
-        webView?.customUserAgent = mobileUserAgent
-    }
-    
-    private func setDesktopUserAgent() {
-        let desktopUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15"
-        webView?.customUserAgent = desktopUserAgent
-    }
-    
-    func printCurrentPage() {
-        guard let webView = webView else { return }
-        
+
         let printController = UIPrintInteractionController.shared
-        let printInfo = UIPrintInfo(dictionary: nil)
+
+        let printInfo = UIPrintInfo.printInfo()
         printInfo.outputType = .general
-        printInfo.jobName = pageTitle.isEmpty ? "Página Web" : pageTitle
-        
+        printInfo.jobName = !pageTitle.isEmpty ? pageTitle : "Web Page"
+
         printController.printInfo = printInfo
         printController.printFormatter = webView.viewPrintFormatter()
-        
-        printController.present(animated: true)
+
+        printController.present(animated: true) { (controller, completed, error) in
+            if let error = error {
+                print("Print error: \(error.localizedDescription)")
+            } else if completed {
+                print("Print completed successfully")
+            }
+        }
     }
-    
+
+    func printCurrentPage() {
+        printWebPage()
+    }
+
     func printFullWebsite() {
         // Implementation for full website printing
-        printCurrentPage() // For now, same as current page
+        printWebPage() // For now, same as current page
     }
-    
+
     func saveAsPDF() {
         guard let webView = webView else { return }
-        
+
         let pdfConfiguration = WKPDFConfiguration()
-        
+
         webView.createPDF(configuration: pdfConfiguration) { result in
             switch result {
             case .success(let data):
@@ -128,12 +139,12 @@ class WebViewManager: NSObject, ObservableObject {
             }
         }
     }
-    
+
     private func savePDFToDocuments(data: Data) {
         // Save PDF to documents directory
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let pdfURL = documentsPath.appendingPathComponent("pagina_web_\(Date().timeIntervalSince1970).pdf")
-        
+
         do {
             try data.write(to: pdfURL)
             print("PDF guardado en: \(pdfURL)")
@@ -147,14 +158,18 @@ class WebViewManager: NSObject, ObservableObject {
 // MARK: - WKNavigationDelegate
 extension WebViewManager: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        isLoading = true
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        isLoading = false
-        canGoBack = webView.canGoBack
-        canGoForward = webView.canGoForward
-        
+        DispatchQueue.main.async {
+            self.isLoading = false
+            self.canGoBack = webView.canGoBack
+            self.canGoForward = webView.canGoForward
+        }
+
         webView.evaluateJavaScript("document.title") { result, error in
             if let title = result as? String {
                 DispatchQueue.main.async {
@@ -162,16 +177,19 @@ extension WebViewManager: WKNavigationDelegate {
                 }
             }
         }
-        
+
         // Update URL string to reflect current URL
-        if let currentURL = webView.url?.absoluteString {
+        if let currentURL = webView.url {
             DispatchQueue.main.async {
-                self.urlString = currentURL
+                self.url = currentURL
+                self.urlString = currentURL.absoluteString
             }
         }
     }
-    
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        isLoading = false
+        DispatchQueue.main.async {
+            self.isLoading = false
+        }
     }
 }
