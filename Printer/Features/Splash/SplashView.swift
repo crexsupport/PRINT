@@ -9,122 +9,297 @@ import SwiftUI
 
 struct SplashView: View {
     @EnvironmentObject var splashManager: SplashManager
-    @State private var logoScale: CGFloat = 0.8
     @State private var logoOpacity: Double = 0.0
-    @State private var titleOffset: CGFloat = 50
-    @State private var titleOpacity: Double = 0.0
+    @State private var logoScale: CGFloat = 0.9
     @State private var contentOpacity: Double = 0.0
-    @State private var particlesVisible = false
+    @State private var brandOpacity: Double = 0.0
+    @State private var progressOpacity: Double = 0.0
+    @State private var backgroundShift: Double = 0.0
     
     var body: some View {
         ZStack {
-            // Background gradient
-            LinearGradient(
+            // Dynamic gradient background
+            AngularGradient(
                 colors: [
-                    Color.blue.opacity(0.8),
-                    Color.blue,
-                    Color.indigo
+                    Color(.systemGray6),
+                    Color.white,
+                    Color(.systemGray5),
+                    Color.white,
+                    Color(.systemGray6)
                 ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                center: .center,
+                angle: .degrees(backgroundShift)
             )
             .ignoresSafeArea()
+            .animation(
+                Animation.linear(duration: 20.0)
+                    .repeatForever(autoreverses: false),
+                value: backgroundShift
+            )
             
-            // Animated background particles
-            ParticleBackground(isVisible: particlesVisible)
+            // Subtle overlay pattern
+            ModernPatternOverlay()
+                .opacity(0.03)
             
-            VStack(spacing: 40) {
+            VStack(spacing: 0) {
                 Spacer()
                 
-                // Logo section
-                VStack(spacing: 20) {
-                    AnimatedLogo(size: 120)
-                        .scaleEffect(logoScale)
-                        .opacity(logoOpacity)
-                    
-                    // App title
-                    VStack(spacing: 8) {
-                        Text("Smart Printer")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
+                // Main content area
+                VStack(spacing: 40) {
+                    // Company logo section
+                    VStack(spacing: 20) {
+                        // Modern logo container
+                        ModernLogoContainer()
+                            .scaleEffect(logoScale)
+                            .opacity(logoOpacity)
                         
-                        Text("Pro")
-                            .font(.system(size: 24, weight: .medium, design: .rounded))
-                            .foregroundColor(.yellow)
+                        // Brand identity
+                        VStack(spacing: 8) {
+                            HStack(spacing: 0) {
+                                Text("SMART")
+                                    .font(.system(size: 28, weight: .ultraLight, design: .default))
+                                    .foregroundColor(.black)
+                                    .tracking(4.0)
+                                
+                                Text("PRINTER")
+                                    .font(.system(size: 28, weight: .medium, design: .default))
+                                    .foregroundColor(.black)
+                                    .tracking(2.0)
+                            }
+                            
+                            Rectangle()
+                                .fill(Color.black)
+                                .frame(width: 60, height: 1)
+                            
+                            Text("ENTERPRISE SOLUTIONS")
+                                .font(.system(size: 11, weight: .regular, design: .default))
+                                .foregroundColor(.gray)
+                                .tracking(1.5)
+                        }
+                        .opacity(brandOpacity)
                     }
-                    .offset(y: titleOffset)
-                    .opacity(titleOpacity)
+                    
+                    // Status section
+                    VStack(spacing: 25) {
+                        SystemStatusIndicator()
+                            .opacity(contentOpacity)
+                        
+                        ModernProgressIndicator(
+                            progress: splashManager.initializationProgress,
+                            message: splashManager.currentLoadingMessage
+                        )
+                        .opacity(progressOpacity)
+                    }
                 }
                 
                 Spacer()
                 
-                // Loading section
-                LoadingIndicator(
-                    progress: splashManager.initializationProgress,
-                    message: splashManager.currentLoadingMessage
-                )
+                // Footer
+                VStack(spacing: 8) {
+                    Text("© 2024 SmartPrinter Solutions")
+                        .font(.system(size: 10, weight: .regular, design: .default))
+                        .foregroundColor(.gray.opacity(0.7))
+                        .tracking(0.5)
+                    
+                    Text("Version 1.0")
+                        .font(.system(size: 9, weight: .light, design: .default))
+                        .foregroundColor(.gray.opacity(0.5))
+                }
                 .opacity(contentOpacity)
-                .padding(.bottom, 80)
+                .padding(.bottom, 30)
             }
-            .padding()
+            .padding(.horizontal, 40)
         }
         .onAppear {
-            startAnimations()
+            startCorporateAnimations()
         }
-        .onTapGesture(count: 2) {
-            // Double tap to skip splash (for development)
+        .onTapGesture(count: 3) {
+            // Triple tap to skip (more discrete)
             splashManager.skipSplash()
         }
     }
     
-    private func startAnimations() {
-        // Particles
-        withAnimation(.easeIn(duration: 0.5)) {
-            particlesVisible = true
+    private func startCorporateAnimations() {
+        // Background rotation
+        withAnimation {
+            backgroundShift = 360
         }
         
-        // Logo animation
-        withAnimation(.easeOut(duration: 1.0)) {
-            logoScale = 1.0
+        // Logo entrance
+        withAnimation(.easeOut(duration: 1.2).delay(0.3)) {
             logoOpacity = 1.0
+            logoScale = 1.0
         }
         
-        // Title animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation(.easeOut(duration: 0.8)) {
-                titleOffset = 0
-                titleOpacity = 1.0
+        // Brand reveal
+        withAnimation(.easeOut(duration: 0.8).delay(1.0)) {
+            brandOpacity = 1.0
+        }
+        
+        // System status
+        withAnimation(.easeOut(duration: 0.6).delay(1.5)) {
+            contentOpacity = 1.0
+        }
+        
+        // Progress indicator
+        withAnimation(.easeOut(duration: 0.5).delay(2.0)) {
+            progressOpacity = 1.0
+        }
+    }
+}
+
+struct ModernLogoContainer: View {
+    @State private var innerRotation: Double = 0
+    @State private var pulseScale: CGFloat = 1.0
+    @State private var iconOpacity: Double = 0.8
+    
+    var body: some View {
+        ZStack {
+            // Outer frame
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.black.opacity(0.1), lineWidth: 2)
+                .frame(width: 120, height: 120)
+            
+            // Inner rotating element
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.black.opacity(0.05), lineWidth: 1)
+                .frame(width: 80, height: 80)
+                .rotationEffect(.degrees(innerRotation))
+                .animation(
+                    Animation.linear(duration: 15.0)
+                        .repeatForever(autoreverses: false),
+                    value: innerRotation
+                )
+            
+            // Central printer icon - using outline version
+            Image(systemName: "printer")
+                .font(.system(size: 32, weight: .regular, design: .default))
+                .foregroundColor(.black)
+                .opacity(iconOpacity)
+                .scaleEffect(pulseScale)
+                .animation(
+                    Animation.easeInOut(duration: 2.0)
+                        .repeatForever(autoreverses: true),
+                    value: pulseScale
+                )
+                .animation(
+                    Animation.easeInOut(duration: 1.5)
+                        .repeatForever(autoreverses: true),
+                    value: iconOpacity
+                )
+        }
+        .onAppear {
+            innerRotation = 360
+            pulseScale = 1.1
+            iconOpacity = 1.0
+        }
+    }
+}
+
+struct SystemStatusIndicator: View {
+    @State private var statusIndex = 0
+    private let statusItems = ["SYSTEM", "NETWORK", "DRIVERS", "READY"]
+    
+    var body: some View {
+        HStack(spacing: 20) {
+            ForEach(0..<4, id: \.self) { index in
+                VStack(spacing: 6) {
+                    Circle()
+                        .fill(index <= statusIndex ? Color.green : Color.gray.opacity(0.3))
+                        .frame(width: 8, height: 8)
+                    
+                    Text(statusItems[index])
+                        .font(.system(size: 8, weight: .medium, design: .default))
+                        .foregroundColor(index <= statusIndex ? .black : .gray)
+                        .tracking(0.5)
+                }
+                .opacity(index <= statusIndex ? 1.0 : 0.5)
+                .animation(.easeInOut(duration: 0.3), value: statusIndex)
             }
         }
-        
-        // Content animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            withAnimation(.easeOut(duration: 0.6)) {
-                contentOpacity = 1.0
+        .onAppear {
+            animateStatus()
+        }
+    }
+    
+    private func animateStatus() {
+        for i in 0..<4 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.8) {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    statusIndex = i
+                }
             }
         }
     }
 }
 
-struct ParticleBackground: View {
-    let isVisible: Bool
+struct ModernProgressIndicator: View {
+    let progress: Double
+    let message: String
     
     var body: some View {
-        ForEach(0..<15, id: \.self) { index in
-            Circle()
-                .fill(Color.white.opacity(0.1))
-                .frame(width: CGFloat.random(in: 4...12))
-                .position(
-                    x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
-                    y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
-                )
-                .opacity(isVisible ? 1 : 0)
-                .animation(
-                    Animation.easeInOut(duration: Double.random(in: 3...6))
-                        .repeatForever(autoreverses: true)
-                        .delay(Double(index) * 0.2),
-                    value: isVisible
-                )
+        VStack(spacing: 12) {
+            // Modern progress bar
+            HStack(spacing: 12) {
+                // Invisible spacer to balance the percentage on the right
+                Spacer()
+                    .frame(width: 55)
+                
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 2)
+                    
+                    Rectangle()
+                        .fill(Color.black)
+                        .frame(height: 2)
+                        .scaleEffect(x: progress, y: 1, anchor: .leading)
+                        .animation(.easeInOut(duration: 0.3), value: progress)
+                }
+                .frame(maxWidth: .infinity)
+                
+                Text("\(Int(progress * 100))%")
+                    .font(.system(size: 9, weight: .medium, design: .default))
+                    .foregroundColor(.black)
+                    .tracking(0.5)
+                    .frame(width: 35, alignment: .trailing)
+            }
+            .padding(.horizontal, 20)
+            
+            // Status message
+            Text(message.uppercased())
+                .font(.system(size: 10, weight: .regular, design: .default))
+                .foregroundColor(.gray)
+                .tracking(1.0)
+                .animation(.easeInOut(duration: 0.2), value: message)
+        }
+    }
+}
+
+struct ModernPatternOverlay: View {
+    var body: some View {
+        ZStack {
+            // Dot pattern
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 30), count: 15), spacing: 30) {
+                ForEach(0..<150, id: \.self) { _ in
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 1, height: 1)
+                }
+            }
+            
+            // Diagonal lines
+            Path { path in
+                let spacing: CGFloat = 60
+                let width = UIScreen.main.bounds.width * 1.5
+                let height = UIScreen.main.bounds.height * 1.5
+                
+                for i in stride(from: -width, through: width * 2, by: spacing) {
+                    path.move(to: CGPoint(x: i, y: -height))
+                    path.addLine(to: CGPoint(x: i + height, y: height * 2))
+                }
+            }
+            .stroke(Color.black.opacity(0.02), lineWidth: 0.5)
         }
     }
 }

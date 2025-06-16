@@ -9,47 +9,48 @@ import SwiftUI
 
 struct AnimatedLogo: View {
     @State private var isAnimating = false
-    @State private var glowIntensity: Double = 0.5
+    @State private var shadowRadius: CGFloat = 5
+    @State private var iconScale: CGFloat = 1.0
     
     let size: CGFloat
     
-    init(size: CGFloat = 120) {
+    init(size: CGFloat = 100) {
         self.size = size
     }
     
     var body: some View {
         ZStack {
-            // Glow effect background
+            // Background circle with subtle shadow
             Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            Color.yellow.opacity(glowIntensity * 0.6),
-                            Color.orange.opacity(glowIntensity * 0.4),
-                            Color.clear
-                        ],
-                        center: .center,
-                        startRadius: size * 0.25,
-                        endRadius: size * 0.7
-                    )
+                .fill(Color.white)
+                .frame(width: size * 1.2, height: size * 1.2)
+                .shadow(
+                    color: .black.opacity(0.08),
+                    radius: shadowRadius,
+                    x: 0,
+                    y: shadowRadius / 2
                 )
-                .frame(width: size, height: size)
-                .animation(
-                    Animation.easeInOut(duration: 2.0)
-                        .repeatForever(autoreverses: true),
-                    value: glowIntensity
-                )
-            
-            // Crown icon
-            Image(systemName: "crown.fill")
-                .font(.system(size: size * 0.5, weight: .bold))
-                .foregroundColor(.yellow)
-                .shadow(color: .yellow.opacity(0.8), radius: 15, x: 0, y: 0)
-                .rotationEffect(.degrees(isAnimating ? 5 : -5))
                 .animation(
                     Animation.easeInOut(duration: 3.0)
                         .repeatForever(autoreverses: true),
-                    value: isAnimating
+                    value: shadowRadius
+                )
+            
+            // Inner circle with border
+            Circle()
+                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                .fill(Color(.systemGray6).opacity(0.1))
+                .frame(width: size, height: size)
+            
+            // Printer icon
+            Image(systemName: "printer.fill")
+                .font(.system(size: size * 0.4, weight: .medium))
+                .foregroundColor(.black)
+                .scaleEffect(iconScale)
+                .animation(
+                    Animation.easeInOut(duration: 2.5)
+                        .repeatForever(autoreverses: true),
+                    value: iconScale
                 )
         }
         .onAppear {
@@ -58,22 +59,27 @@ struct AnimatedLogo: View {
     }
     
     private func startAnimations() {
-        withAnimation {
-            isAnimating = true
-        }
-        
+        // Shadow pulsing animation
         withAnimation(
-            Animation.easeInOut(duration: 2.0)
+            Animation.easeInOut(duration: 3.0)
                 .repeatForever(autoreverses: true)
         ) {
-            glowIntensity = 1.0
+            shadowRadius = 15
+        }
+        
+        // Icon subtle scale animation
+        withAnimation(
+            Animation.easeInOut(duration: 2.5)
+                .repeatForever(autoreverses: true)
+        ) {
+            iconScale = 1.05
         }
     }
 }
 
 #Preview {
     ZStack {
-        Color.blue.ignoresSafeArea()
+        Color(.systemGray6).ignoresSafeArea()
         AnimatedLogo()
     }
 }

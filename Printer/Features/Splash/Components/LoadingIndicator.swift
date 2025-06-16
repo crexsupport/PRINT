@@ -12,15 +12,16 @@ struct LoadingIndicator: View {
     let message: String
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
             // Progress bar
             ProgressBarView(progress: progress)
-                .frame(width: 220, height: 8)
+                .frame(width: 250, height: 4)
             
             // Loading message
             Text(message)
-                .font(.system(size: 16, weight: .medium, design: .rounded))
-                .foregroundColor(.white.opacity(0.9))
+                .font(.system(size: 15, weight: .regular, design: .default))
+                .foregroundColor(.gray)
+                .tracking(0.3)
                 .animation(.easeInOut(duration: 0.3), value: message)
         }
     }
@@ -33,17 +34,17 @@ struct ProgressBarView: View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 // Background track
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.white.opacity(0.2))
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(Color.gray.opacity(0.2))
                 
                 // Progress fill
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: 2)
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color.yellow,
-                                Color.orange,
-                                Color.yellow
+                                Color.black.opacity(0.8),
+                                Color.black.opacity(0.6),
+                                Color.black.opacity(0.8)
                             ],
                             startPoint: .leading,
                             endPoint: .trailing
@@ -52,24 +53,24 @@ struct ProgressBarView: View {
                     .frame(width: geometry.size.width * progress)
                     .animation(.easeInOut(duration: 0.5), value: progress)
                 
-                // Shimmer effect
+                // Subtle highlight effect
                 if progress > 0 {
-                    RoundedRectangle(cornerRadius: 4)
+                    RoundedRectangle(cornerRadius: 2)
                         .fill(
                             LinearGradient(
                                 colors: [
                                     Color.clear,
-                                    Color.white.opacity(0.6),
+                                    Color.white.opacity(0.4),
                                     Color.clear
                                 ],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: 30)
-                        .offset(x: -15 + (geometry.size.width * progress * 0.8))
+                        .frame(width: 20)
+                        .offset(x: (geometry.size.width * progress) - 10)
                         .animation(
-                            Animation.linear(duration: 1.0)
+                            Animation.linear(duration: 1.5)
                                 .repeatForever(autoreverses: false),
                             value: progress
                         )
@@ -82,10 +83,11 @@ struct ProgressBarView: View {
 
 #Preview {
     ZStack {
-        Color.blue.ignoresSafeArea()
-        VStack {
+        Color.white.ignoresSafeArea()
+        VStack(spacing: 30) {
+            LoadingIndicator(progress: 0.3, message: "Initializing system...")
             LoadingIndicator(progress: 0.7, message: "Loading preferences...")
-            LoadingIndicator(progress: 0.3, message: "Connecting to services...")
+            LoadingIndicator(progress: 1.0, message: "Ready!")
         }
     }
 }
