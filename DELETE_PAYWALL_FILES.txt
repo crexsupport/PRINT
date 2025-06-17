@@ -1,0 +1,12 @@
+ARCHIVOS A ELIMINAR MANUALMENTE:
+
+1. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Services/SubscriptionManager.swift
+2. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Paywall/PaywallManager.swift
+3. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Paywall/PaywallView.swift
+4. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Paywall/Components/SubscriptionOptionsView.swift
+5. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Paywall/Components/PurchaseButton.swift
+6. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Extensions/View+Premium.swift
+7. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/StoreKit/Configuration.storekit
+8. /Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Assets.xcassets/paywall_printer.imageset/
+
+Por favor elimina manualmente estos archivos y carpetas del proyecto en Xcode.

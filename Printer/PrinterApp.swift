@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct PrinterApp: App {
     @StateObject private var splashManager = SplashManager()
+    @StateObject private var onboardingManager = OnboardingManager()
     
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,11 @@ struct PrinterApp: App {
                     .onAppear {
                         splashManager.startInitialization()
                     }
+            } else if !onboardingManager.hasCompletedOnboarding {
+                OnboardingView {
+                    onboardingManager.completeOnboarding()
+                }
+                .preferredColorScheme(.light)
             } else {
                 ContentView()
                     .preferredColorScheme(.light)

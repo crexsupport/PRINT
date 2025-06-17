@@ -1,0 +1,278 @@
+{
+  "" : {
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/Printer-master.dia",
+    "emit-module-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/Printer-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/Printer-master-emit-module.dia",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/Printer-master.swiftdeps"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/ContentView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Core/MainTabView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainTabView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/BatchPrint/BatchPrintView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/BatchPrintView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Home/Components/HomeHeaderView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeHeaderView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Home/Components/LabelPrintingView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelPrintingView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Home/Components/MainFeaturesGridView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/MainFeaturesGridView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Home/Components/PrinterSetupView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterSetupView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Home/HomeView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/HomeView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Printables/PrintablesView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrintablesView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/Components/CameraPreviewView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/CameraPreviewView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/Components/DocumentCollectionView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentCollectionView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/Components/DocumentOverlayView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentOverlayView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/Components/DocumentPreviewView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/DocumentPreviewView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/ScannerManager.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerManager~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Scanner/ScannerView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/ScannerView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/Settings/SettingsView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/WebPages/Components/WebView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/WebPages/WebPagesView.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebPagesView~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Features/WebPages/WebViewManager.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/WebViewManager~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/PrinterApp.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterApp~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Components/FeatureCard.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/FeatureCard~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Components/LabelCard.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelCard~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Components/LabelOptionCard.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOptionCard~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Models/LabelOption.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelOption~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Models/LabelTemplate.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/LabelTemplate~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/Printer/Shared/Models/PrinterFeature.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/PrinterFeature~partial.swiftmodule"
+  },
+  "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/pnadal/Desktop/Apple Dev/Developing/Printer/build/Printer.build/Debug-iphoneos/Printer.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}
