@@ -64,7 +64,7 @@ struct FeatureCard: View {
             PhotoPrintView(showBackButton: true)
         }
         .fullScreenCover(isPresented: $showingTextNotesModal) {
-            TextNotesView(showBackButton: true)
+            TextNotesView()
         }
         .fullScreenCover(isPresented: $showingBatchPrintModal) {
             BatchPrintView()
@@ -170,6 +170,8 @@ struct DocumentViewerModal: View {
     let documentURL: URL
     let onDismiss: () -> Void
     @State private var hasAccessToFile = false
+    @State private var showingPrintAlert = false
+    @State private var printAlertMessage = ""
     
     var body: some View {
         NavigationView {
@@ -210,7 +212,7 @@ struct DocumentViewerModal: View {
                 }
                 
                 Button {
-                    print("Printing document: \(documentURL.lastPathComponent)")
+                    printDocument()
                 } label: {
                     Text("Print Document")
                         .font(.headline)
@@ -245,6 +247,51 @@ struct DocumentViewerModal: View {
             }
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+        .alert("Print Status", isPresented: $showingPrintAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(printAlertMessage)
+        }
+    }
+    
+    private func printDocument() {
+        print("Attempting to print document: \(documentURL.lastPathComponent)")
+        
+        // Check if printing is available
+        guard UIPrintInteractionController.isPrintingAvailable else {
+            printAlertMessage = "Printing is not available on this device."
+            showingPrintAlert = true
+            return
+        }
+        
+        let printController = UIPrintInteractionController.shared
+        
+        // Configure print info
+        let printInfo = UIPrintInfo.printInfo()
+        printInfo.outputType = .general
+        printInfo.jobName = documentURL.lastPathComponent
+        printInfo.duplex = .none
+        
+        printController.printInfo = printInfo
+        printController.printingItem = documentURL
+        
+        // Present the print interface
+        printController.present(animated: true) { (controller, completed, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Print error: \(error.localizedDescription)")
+                    self.printAlertMessage = "Print failed: \(error.localizedDescription)"
+                    self.showingPrintAlert = true
+                } else if completed {
+                    print("Print job completed successfully")
+                    self.printAlertMessage = "Document sent to printer successfully!"
+                    self.showingPrintAlert = true
+                } else {
+                    print("Print job was cancelled")
+                    // Don't show alert for cancellation
+                }
+            }
+        }
     }
 }
 

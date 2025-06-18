@@ -1,8 +1,13 @@
 import SwiftUI
 import PDFKit
+import UniformTypeIdentifiers
 
 struct ImageToPDFResultView: View {
     @ObservedObject var viewModel: ImageToPDFViewModel
+    @State private var showingDocumentPicker = false
+    @State private var showingSaveAlert = false
+    @State private var saveAlertMessage = ""
+    @State private var documentToExport: URL?
     
     var body: some View {
         ScrollView {
@@ -15,6 +20,28 @@ struct ImageToPDFResultView: View {
             }
         }
         .background(Color(.systemBackground))
+        .fileExporter(
+            isPresented: $showingDocumentPicker,
+            document: documentToExport.map { PDFDocumentFile(url: $0) },
+            contentType: .pdf,
+            defaultFilename: generateDefaultFilename()
+        ) { result in
+            switch result {
+            case .success(let url):
+                saveAlertMessage = "PDF saved successfully to \(url.lastPathComponent)"
+                showingSaveAlert = true
+                print("PDF saved to: \(url)")
+            case .failure(let error):
+                saveAlertMessage = "Failed to save PDF: \(error.localizedDescription)"
+                showingSaveAlert = true
+                print("Save error: \(error)")
+            }
+        }
+        .alert("Save Status", isPresented: $showingSaveAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(saveAlertMessage)
+        }
     }
     
     private var enhancedPDFPreview: some View {
@@ -113,7 +140,6 @@ struct ImageToPDFResultView: View {
                     .cornerRadius(12)
             }
             
-            // Save to Files button
             Button {
                 if let url = viewModel.generatedPDFURL {
                     savePDFToFiles(url: url)
@@ -150,21 +176,54 @@ struct ImageToPDFResultView: View {
     }
     
     private func savePDFToFiles(url: URL) {
-        let documentPicker = UIDocumentPickerViewController(forExporting: [url])
-        documentPicker.shouldShowFileExtensions = true
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first,
-           let rootViewController = window.rootViewController {
+        // Create a persistent copy of the PDF in Documents directory
+        do {
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileName = generateDefaultFilename()
+            let persistentURL = documentsPath.appendingPathComponent(fileName)
             
-            // Find the topmost presented view controller
-            var topViewController = rootViewController
-            while let presentedViewController = topViewController.presentedViewController {
-                topViewController = presentedViewController
-            }
+            // Remove existing file if it exists
+            try? FileManager.default.removeItem(at: persistentURL)
             
-            topViewController.present(documentPicker, animated: true)
+            // Copy the temporary file to a persistent location
+            try FileManager.default.copyItem(at: url, to: persistentURL)
+            
+            // Set the document to export and show picker
+            documentToExport = persistentURL
+            showingDocumentPicker = true
+            
+            print("Created persistent copy at: \(persistentURL)")
+            
+        } catch {
+            saveAlertMessage = "Failed to prepare PDF for saving: \(error.localizedDescription)"
+            showingSaveAlert = true
+            print("Failed to create persistent copy: \(error)")
         }
+    }
+    
+    private func generateDefaultFilename() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd_HHmmss"
+        return "Images_to_PDF_\(formatter.string(from: Date())).pdf"
+    }
+}
+
+struct PDFDocumentFile: FileDocument {
+    static var readableContentTypes: [UTType] { [.pdf] }
+    
+    var url: URL
+    
+    init(url: URL) {
+        self.url = url
+    }
+    
+    init(configuration: ReadConfiguration) throws {
+        // This shouldn't be called for export
+        throw CocoaError(.fileReadCorruptFile)
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return try FileWrapper(url: url)
     }
 }
 

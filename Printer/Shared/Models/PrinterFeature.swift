@@ -14,13 +14,15 @@ struct PrinterFeature: Identifiable {
     let icon: String
     let color: Color
     let isComingSoon: Bool
+    let isPremium: Bool
     
-    init(title: String, description: String, icon: String, color: Color, isComingSoon: Bool = false) {
+    init(title: String, description: String, icon: String, color: Color, isComingSoon: Bool = false, isPremium: Bool = false) {
         self.title = title
         self.description = description
         self.icon = icon
         self.color = color
         self.isComingSoon = isComingSoon
+        self.isPremium = isPremium
     }
 }
 

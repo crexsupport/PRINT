@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "paywall_printer.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

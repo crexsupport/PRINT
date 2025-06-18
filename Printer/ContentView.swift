@@ -10,9 +10,13 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         MainTabView()
+            .environmentObject(SubscriptionManager())
+            .environmentObject(PaywallManager())
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

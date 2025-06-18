@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var showWelcomeBanner = true
+    @EnvironmentObject var subscriptionManager: SubscriptionManager
+    @EnvironmentObject var paywallManager: PaywallManager
 
     var body: some View {
         NavigationView {
@@ -73,9 +75,15 @@ struct HomeView: View {
                         
                         // Main header content - WHITE BACKGROUND with bottom padding
                         HStack {
-                            Image(systemName: "crown.fill")
-                                .foregroundColor(.orange)
-                                .font(.system(size: 18))
+                            if !subscriptionManager.isSubscribed {
+                                Button(action: {
+                                    paywallManager.shouldShowPaywall = true
+                                }) {
+                                    Image(systemName: "crown.fill")
+                                        .foregroundColor(.orange)
+                                        .font(.system(size: 18))
+                                }
+                            }
                             
                             Spacer()
                             
@@ -135,4 +143,6 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .environmentObject(ScannerManager())
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

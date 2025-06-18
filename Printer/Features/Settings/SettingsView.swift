@@ -10,7 +10,8 @@ import MessageUI
 import StoreKit
 
 struct SettingsView: View {
-    @State private var isUserPremium = false // Simulated premium status
+    @EnvironmentObject var subscriptionManager: SubscriptionManager
+    @EnvironmentObject var paywallManager: PaywallManager
     @State private var shimmerOffset: CGFloat = 0
     @State private var animationTrigger = false
     @State private var showingMailCompose = false
@@ -36,7 +37,7 @@ struct SettingsView: View {
                     
                     VStack(spacing: 24) {
                         // Premium Card (only for non-premium users)
-                        if !isUserPremium {
+                        if !subscriptionManager.isSubscribed {
                             premiumUpgradeCard
                                 .padding(.horizontal, 20)
                         }
@@ -152,10 +153,9 @@ struct SettingsView: View {
         .shadow(color: Color.blue.opacity(0.2), radius: 10, x: 0, y: 4)
         .onTapGesture {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                // Handle premium upgrade with haptic feedback
                 let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
                 impactFeedback.impactOccurred()
-                print("Premium upgrade tapped")
+                paywallManager.shouldShowPaywall = true
             }
         }
     }
@@ -206,7 +206,21 @@ struct SettingsView: View {
                 subtitle: nil,
                 icon: "arrow.clockwise",
                 iconColor: .blue,
-                action: { restorePurchases() }
+                action: { 
+                    Task {
+                        await subscriptionManager.restorePurchases()
+                        if subscriptionManager.isSubscribed {
+                            alertMessage = "Purchases restored successfully!"
+                            showingAlert = true
+                        } else if let error = subscriptionManager.error {
+                            alertMessage = error.localizedDescription
+                            showingAlert = true
+                        } else {
+                            alertMessage = "No previous purchases found."
+                            showingAlert = true
+                        }
+                    }
+                }
             ),
             SettingsItem(
                 id: "contact",
@@ -266,9 +280,6 @@ struct SettingsView: View {
         """
     }
     
-    private func restorePurchases() {
-
-    }
     
     private func openPrivacyPolicy() {
         if let url = URL(string: "https://printerapp.com/privacy") {
@@ -385,4 +396,6 @@ struct MailComposeView: UIViewControllerRepresentable {
 
 #Preview {
     SettingsView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

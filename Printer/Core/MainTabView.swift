@@ -10,6 +10,8 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab = 0
     @EnvironmentObject var scannerManager: ScannerManager
+    @EnvironmentObject var subscriptionManager: SubscriptionManager
+    @EnvironmentObject var paywallManager: PaywallManager
     
     init() {
         // Configure tab bar appearance with white background and elevation
@@ -66,6 +68,12 @@ struct MainTabView: View {
                 .tag(3)
         }
         .accentColor(.blue)
+        .fullScreenCover(isPresented: $paywallManager.shouldShowPaywall) {
+            PaywallView(onDismiss: {
+                paywallManager.shouldShowPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+        }
     }
 }
 
@@ -191,4 +199,6 @@ struct TextNotesMainView: View {
 #Preview {
     MainTabView()
         .environmentObject(ScannerManager())
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

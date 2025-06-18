@@ -1,0 +1,106 @@
+{
+  "identifier" : "C8B2E5F7",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6471234567",
+    "_developerTeamID" : "5B8867XFF2",
+    "_lastSynchronizedDate" : 762651048.37767398
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21523456",
+      "localizations" : [
+
+      ],
+      "name" : "Premium Subscription",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "69.99",
+          "familyShareable" : false,
+          "id" : "com.blastlystudios.smartprinter.annual",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Get unlimited access to all premium features with our annual subscription",
+              "displayName" : "Premium Annual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.blastlystudios.smartprinter.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Annual Subscription",
+          "subscriptionGroupID" : "21523456",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "id" : "com.blastlystudios.smartprinter.weekly",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Get unlimited access to all premium features with our weekly subscription",
+              "displayName" : "Premium Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.blastlystudios.smartprinter.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Premium Weekly Subscription",
+          "subscriptionGroupID" : "21523456",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "id" : "com.blastlystudios.smartprinter.weeklytrial",
+          "introductoryOffer" : {
+            "inAppPurchaseType" : "FreeTrial",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "FreeTrial",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "Get unlimited access to all premium features with 3-day free trial",
+              "displayName" : "Premium Weekly with Trial",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.blastlystudios.smartprinter.weeklytrial",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Premium Weekly with Trial",
+          "subscriptionGroupID" : "21523456",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
