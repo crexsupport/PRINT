@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 @main
 struct PrinterApp: App {
@@ -13,6 +14,7 @@ struct PrinterApp: App {
     @StateObject private var onboardingManager = OnboardingManager()
     @StateObject private var paywallManager = PaywallManager()
     @StateObject private var subscriptionManager = SubscriptionManager()
+    @StateObject private var attManager = ATTManager()
     
     @State private var appState: AppState = .splash
     
@@ -21,6 +23,13 @@ struct PrinterApp: App {
         case onboarding
         case paywall
         case main
+    }
+    
+    init() {
+        FirebaseApp.configure()
+        
+        // Track app launch (this is allowed even without ATT permission)
+        AnalyticsManager.shared.trackAppLaunch(isFirstLaunch: !OnboardingManager().hasCompletedOnboarding)
     }
     
     var body: some Scene {
@@ -44,17 +53,23 @@ struct PrinterApp: App {
                 case .onboarding:
                     OnboardingView {
                         onboardingManager.completeOnboarding()
+                        AnalyticsManager.shared.trackOnboardingCompleted()
                         handleOnboardingComplete()
                     }
                     .preferredColorScheme(.light)
+                    .environmentObject(attManager)
                 
                 case .paywall:
                     PaywallView(onDismiss: {
                         print("Paywall dismissed")
                         paywallManager.markPaywallSeen()
+                        AnalyticsManager.shared.trackPaywallDismissed(context: "after_onboarding")
                         appState = .main
                     })
                     .environmentObject(subscriptionManager)
+                    .onAppear {
+                        AnalyticsManager.shared.trackPaywallView(context: "after_onboarding")
+                    }
                 
                 case .main:
                     ContentView()
@@ -62,15 +77,21 @@ struct PrinterApp: App {
                         .environmentObject(ScannerManager())
                         .environmentObject(subscriptionManager)
                         .environmentObject(paywallManager)
+                        .environmentObject(attManager)
                 }
             }
             .environmentObject(paywallManager)
             .environmentObject(subscriptionManager)
+            .environmentObject(attManager)
             .fullScreenCover(isPresented: $paywallManager.shouldShowPaywall) {
                 PaywallView(onDismiss: {
                     paywallManager.shouldShowPaywall = false
+                    AnalyticsManager.shared.trackPaywallDismissed(context: "feature_restricted")
                 })
                 .environmentObject(subscriptionManager)
+                .onAppear {
+                    AnalyticsManager.shared.trackPaywallView(context: "feature_restricted")
+                }
             }
             .onChange(of: subscriptionManager.isSubscribed) { oldValue, newValue in
                 if newValue && appState == .paywall {
@@ -80,13 +101,21 @@ struct PrinterApp: App {
                 if newValue && paywallManager.shouldShowPaywall {
                     paywallManager.shouldShowPaywall = false
                 }
+                
+                if oldValue != newValue {
+                    AnalyticsManager.shared.setUserSubscriptionStatus(isSubscribed: newValue)
+                }
             }
         }
     }
     
     private func handleSplashComplete() {
         if onboardingManager.hasCompletedOnboarding {
-            // Usuario que regresa
+            // Usuario que regresa - check ATT status
+            Task {
+                await attManager.checkCurrentStatus()
+            }
+            
             if subscriptionManager.isSubscribed {
                 // Ya es premium, ir directo a main
                 appState = .main
@@ -95,7 +124,7 @@ struct PrinterApp: App {
                 appState = .paywall
             }
         } else {
-            // Primera vez, mostrar onboarding
+            // Primera vez, mostrar onboarding (ATT se maneja dentro del onboarding)
             appState = .onboarding
         }
     }

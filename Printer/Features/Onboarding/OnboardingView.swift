@@ -9,6 +9,8 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var currentPage = 0
+    @State private var hasShownATTPrompt = false
+    @StateObject private var attManager = ATTManager()
     @Environment(\.requestReview) private var requestReview
     let onComplete: () -> Void
     
@@ -150,6 +152,26 @@ struct OnboardingView: View {
                 .padding(.horizontal, pages[currentPage].isReview ? 40 : 32)
                 .padding(.bottom, pages[currentPage].isReview ? 50 : 70)
                 .animation(.easeInOut(duration: 0.4), value: currentPage)
+            }
+        }
+        .onAppear {
+            // Check if we need to show ATT prompt immediately on first page
+            if !hasShownATTPrompt && attManager.shouldRequestPermission {
+                // Small delay to let the view settle
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    Task {
+                        await attManager.requestTrackingPermission()
+                        hasShownATTPrompt = true
+                        
+                        // Track the ATT response
+                        AnalyticsManager.shared.trackATTPermissionResponse(granted: attManager.isTrackingAllowed)
+                    }
+                }
+            } else {
+                // If ATT not needed, just update current status
+                Task {
+                    await attManager.checkCurrentStatus()
+                }
             }
         }
     }

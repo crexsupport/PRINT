@@ -22,48 +22,58 @@ struct SettingsView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 0) {
-                    // Header with better spacing
-                    VStack(spacing: 8) {
+                    // Modern header with glassmorphism
+                    VStack(spacing: 12) {
                         HStack {
-                            Text("Settings")
-                                .font(.system(size: 32, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Settings")
+                                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                                    .foregroundColor(.primary)
+                                
+                                Text("Customize your printing experience")
+                                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
                             Spacer()
                         }
                         .padding(.horizontal, 24)
                         .padding(.top, 20)
                     }
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 32)
                     
-                    VStack(spacing: 24) {
+                    VStack(spacing: 28) {
                         // Premium Card (only for non-premium users)
                         if !subscriptionManager.isSubscribed {
                             premiumUpgradeCard
                                 .padding(.horizontal, 20)
                         }
                         
-                        // Support Section
-                        settingsSection(title: "SUPPORT", items: supportItems)
+                        // Support Section with modern design
+                        modernSettingsSection(title: "SUPPORT", items: supportItems, iconColor: .blue)
                         
-                        // About Section
-                        settingsSection(title: "ABOUT", items: aboutItems)
+                        // About Section with modern design
+                        modernSettingsSection(title: "ABOUT", items: aboutItems, iconColor: .blue)
                         
-                        // App Version with better styling
-                        VStack(spacing: 6) {
-                            Text("Printer Pro")
-                                .font(.system(size: 14, weight: .medium, design: .rounded))
-                                .foregroundColor(.secondary)
-                            
-                            Text("Version 1.0.0")
-                                .font(.system(size: 12, weight: .regular, design: .rounded))
-                                .foregroundColor(.secondary.opacity(0.7))
-                        }
-                        .padding(.top, 40)
-                        .padding(.bottom, 100)
+                        // Modern app version card
+                        modernVersionCard
+                            .padding(.horizontal, 20)
                     }
+                    
+                    // Bottom spacing
+                    Spacer().frame(height: 80)
                 }
             }
-            .background(Color(.systemGroupedBackground))
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(.systemGroupedBackground),
+                        Color(.systemGroupedBackground).opacity(0.8),
+                        Color(.systemBackground)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
             .navigationBarHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -80,122 +90,198 @@ struct SettingsView: View {
             Text(alertMessage)
         }
         .onAppear {
-            startShimmerAnimation()
-        }
-        .onChange(of: animationTrigger) { _ in
-            // Restart animation when trigger changes
+            animationTrigger = true
         }
     }
     
     private var premiumUpgradeCard: some View {
         VStack(spacing: 0) {
             HStack(spacing: 16) {
-                // Crown without background circle
-                Image(systemName: "crown.fill")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(.yellow)
-                    .shadow(color: .yellow.opacity(0.6), radius: 8, x: 0, y: 4)
-                    .scaleEffect(1.1)
+                // Printer icon with glassmorphism effect (matching app theme)
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.25), Color.white.opacity(0.1)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 48, height: 48)
+                        .blur(radius: 0.5)
+                    
+                    Image(systemName: "printer.fill")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundColor(.white)
+                        .shadow(color: .white.opacity(0.3), radius: 4, x: 0, y: 2)
+                }
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Upgrade to Premium")
-                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                    Text("Go Premium")
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                     
-                    Text("Unlock all features and remove ads")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                    Text("Unlock unlimited printing & premium features")
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
                         .foregroundColor(.white.opacity(0.9))
                         .lineLimit(2)
                 }
                 
                 Spacer()
                 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.8))
+                // Floating arrow with glow
+                Image(systemName: "arrow.right.circle.fill")
+                    .font(.system(size: 28))
+                    .foregroundColor(.white)
+                    .shadow(color: .white.opacity(0.4), radius: 8, x: 0, y: 2)
+                    .scaleEffect(animationTrigger ? 1.1 : 1.0)
+                    .animation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true), value: animationTrigger)
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 20)
         }
         .background(
             ZStack {
-                // Solid blue gradient background (only blues)
+                // Main gradient background (matching app's blue theme)
                 RoundedRectangle(cornerRadius: 20)
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color(red: 0.2, green: 0.6, blue: 1.0),
-                                Color(red: 0.1, green: 0.5, blue: 0.95),
-                                Color(red: 0.0, green: 0.4, blue: 0.9)
+                                Color.blue.opacity(0.9),
+                                Color.blue.opacity(0.7),
+                                Color.cyan.opacity(0.6)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                 
-                // Inner border glow
+                // Glassmorphism overlay
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.15),
+                                Color.clear,
+                                Color.white.opacity(0.05)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                
+                // Subtle border glow
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(
                         LinearGradient(
                             colors: [
-                                Color.white.opacity(0.3),
-                                Color.blue.opacity(0.2),
+                                Color.white.opacity(0.4),
+                                Color.white.opacity(0.1),
                                 Color.clear
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1
+                        lineWidth: 1.5
                     )
             }
         )
-        .shadow(color: Color.blue.opacity(0.4), radius: 25, x: 0, y: 12)
-        .shadow(color: Color.blue.opacity(0.2), radius: 10, x: 0, y: 4)
+        .shadow(color: Color.blue.opacity(0.3), radius: 20, x: 0, y: 10)
+        .shadow(color: Color.blue.opacity(0.1), radius: 5, x: 0, y: 2)
         .onTapGesture {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                 let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
                 impactFeedback.impactOccurred()
                 paywallManager.shouldShowPaywall = true
             }
         }
+        .onAppear {
+            animationTrigger = true
+        }
     }
     
-    private func startShimmerAnimation() {
-        // Shimmer removed - this function is no longer needed but keeping for compatibility
-    }
-    
-    private func settingsSection(title: String, items: [SettingsItem]) -> some View {
-        VStack(spacing: 0) {
-            // Section header with better spacing
+    private func modernSettingsSection(title: String, items: [SettingsItem], iconColor: Color) -> some View {
+        VStack(spacing: 16) {
+            // Modern section header
             HStack {
                 Text(title)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundColor(.secondary)
-                    .tracking(0.5)
+                    .tracking(1.2)
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 12)
             
-            // Section items with enhanced styling
-            VStack(spacing: 0) {
+            // Modern cards container
+            VStack(spacing: 8) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    SettingsRow(item: item)
-                    
-                    if index < items.count - 1 {
-                        Divider()
-                            .padding(.leading, 68)
-                            .foregroundColor(.secondary.opacity(0.3))
-                    }
+                    ModernSettingsRow(item: item, iconColor: iconColor)
                 }
             }
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
-            )
             .padding(.horizontal, 20)
         }
+    }
+    
+    private var modernVersionCard: some View {
+        VStack(spacing: 12) {
+            // App icon placeholder with glassmorphism
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.blue.opacity(0.8),
+                                Color.blue.opacity(0.6),
+                                Color.cyan.opacity(0.4)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 64, height: 64)
+                
+                Image(systemName: "printer.fill")
+                    .font(.system(size: 28, weight: .medium))
+                    .foregroundColor(.white)
+                    .shadow(color: .white.opacity(0.3), radius: 4, x: 0, y: 2)
+            }
+            .shadow(color: Color.blue.opacity(0.3), radius: 12, x: 0, y: 6)
+            
+            VStack(spacing: 6) {
+                Text("Printer Pro")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                
+                Text("Version 1.0.0")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.vertical, 24)
+        .frame(maxWidth: .infinity)
+        .background(
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(.systemBackground))
+                
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.1),
+                                Color.clear,
+                                Color.blue.opacity(0.02)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.blue.opacity(0.1), lineWidth: 1)
+            }
+        )
+        .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
     }
 
     private var supportItems: [SettingsItem] {
@@ -203,10 +289,10 @@ struct SettingsView: View {
             SettingsItem(
                 id: "restore",
                 title: "Restore Purchases",
-                subtitle: nil,
+                subtitle: "Sync your premium features",
                 icon: "arrow.clockwise",
                 iconColor: .blue,
-                action: { 
+                action: {
                     Task {
                         await subscriptionManager.restorePurchases()
                         if subscriptionManager.isSubscribed {
@@ -225,7 +311,7 @@ struct SettingsView: View {
             SettingsItem(
                 id: "contact",
                 title: "Contact Support",
-                subtitle: nil,
+                subtitle: "Get help from our team",
                 icon: "envelope",
                 iconColor: .blue,
                 action: {
@@ -245,16 +331,16 @@ struct SettingsView: View {
             SettingsItem(
                 id: "privacy",
                 title: "Privacy Policy",
-                subtitle: nil,
-                icon: "doc.text",
+                subtitle: "How we protect your data",
+                icon: "hand.raised",
                 iconColor: .blue,
                 action: { openPrivacyPolicy() }
             ),
             SettingsItem(
                 id: "terms",
                 title: "Terms of Service",
-                subtitle: nil,
-                icon: "lock",
+                subtitle: "Our terms and conditions",
+                icon: "doc.text",
                 iconColor: .blue,
                 action: { openTermsOfService() }
             )
@@ -282,13 +368,13 @@ struct SettingsView: View {
     
     
     private func openPrivacyPolicy() {
-        if let url = URL(string: "https://printerapp.com/privacy") {
+        if let url = URL(string: "https://printer.addonsmcpe.website/privacy_policy.html") {
             UIApplication.shared.open(url)
         }
     }
     
     private func openTermsOfService() {
-        if let url = URL(string: "https://printerapp.com/terms") {
+        if let url = URL(string: "https://printer.addonsmcpe.website/terms_conditions.html") {
             UIApplication.shared.open(url)
         }
     }
@@ -303,8 +389,9 @@ struct SettingsItem {
     let action: () -> Void
 }
 
-struct SettingsRow: View {
+struct ModernSettingsRow: View {
     let item: SettingsItem
+    let iconColor: Color
     @State private var isPressed = false
     
     var body: some View {
@@ -314,25 +401,36 @@ struct SettingsRow: View {
             item.action()
         }) {
             HStack(spacing: 16) {
+                // Modern icon with glassmorphism
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(item.iconColor.opacity(0.12))
-                        .frame(width: 36, height: 36)
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    iconColor.opacity(0.15),
+                                    iconColor.opacity(0.08)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 38, height: 38)
                     
                     Image(systemName: item.icon)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(item.iconColor)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(iconColor)
+                        .shadow(color: iconColor.opacity(0.3), radius: 4, x: 0, y: 2)
                 }
                 
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(item.title)
-                        .font(.system(size: 17, weight: .medium, design: .rounded))
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .foregroundColor(.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     if let subtitle = item.subtitle {
                         Text(subtitle)
-                            .font(.system(size: 14, weight: .regular))
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -340,18 +438,44 @@ struct SettingsRow: View {
                 
                 Spacer()
                 
+                // Modern arrow
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.secondary.opacity(0.6))
+                    .frame(width: 24, height: 24)
+                    .background(
+                        Circle()
+                            .fill(Color(.systemBackground))
+                            .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
+                    )
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 20)
             .padding(.vertical, 16)
             .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(isPressed ? Color(.systemGray6) : Color.clear)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(.systemBackground))
+                    
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.1),
+                                    Color.clear,
+                                    iconColor.opacity(0.02)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                    
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(iconColor.opacity(0.1), lineWidth: 1)
+                }
             )
             .scaleEffect(isPressed ? 0.98 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: isPressed)
+            .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isPressed)
         }
         .buttonStyle(PlainButtonStyle())
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in

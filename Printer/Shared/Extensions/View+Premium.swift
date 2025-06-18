@@ -8,14 +8,21 @@
 import SwiftUI
 
 extension View {
-    func premiumGate(
-        _ subscriptionManager: SubscriptionManager,
-        _ paywallManager: PaywallManager
+    func requiresPremium(
+        featureName: String,
+        subscriptionManager: SubscriptionManager,
+        paywallManager: PaywallManager
     ) -> some View {
-        self.modifier(PremiumGateModifier(
-            subscriptionManager: subscriptionManager,
-            paywallManager: paywallManager
-        ))
+        self.onTapGesture {
+            AnalyticsManager.shared.trackPremiumFeatureAccess(
+                featureName: featureName,
+                isSubscribed: subscriptionManager.isSubscribed
+            )
+            
+            if !subscriptionManager.isSubscribed {
+                paywallManager.showPaywall(context: .featureRestricted)
+            }
+        }
     }
 }
 

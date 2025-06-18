@@ -45,6 +45,14 @@ class SubscriptionManager: ObservableObject {
             do {
                 let transaction = try checkVerified(result)
                 print("SubscriptionManager: Received transaction update for \(transaction.productID)")
+                
+                if let product = products.first(where: { $0.id == transaction.productID }) {
+                    AnalyticsManager.shared.trackSubscriptionPurchase(
+                        productID: transaction.productID,
+                        price: product.displayPrice
+                    )
+                }
+                
                 await updateSubscriptionStatus()
                 await transaction.finish()
             } catch {
@@ -83,12 +91,27 @@ class SubscriptionManager: ObservableObject {
         isLoading = true
         error = nil
         
+        AnalyticsManager.shared.trackSubscriptionFlow(.purchaseStarted, parameters: [
+            "product_id": product.id,
+            "price": product.displayPrice
+        ])
+        
         do {
             let result = try await product.purchase()
             
             switch result {
             case .success(let verification):
                 let transaction = try checkVerified(verification)
+                
+                AnalyticsManager.shared.trackSubscriptionPurchase(
+                    productID: product.id,
+                    price: product.displayPrice
+                )
+                AnalyticsManager.shared.trackSubscriptionFlow(.purchaseCompleted, parameters: [
+                    "product_id": product.id,
+                    "price": product.displayPrice
+                ])
+                
                 await transaction.finish()
                 await updateSubscriptionStatus()
                 isLoading = false
@@ -96,6 +119,9 @@ class SubscriptionManager: ObservableObject {
                 
             case .userCancelled:
                 error = .userCancelled
+                AnalyticsManager.shared.trackSubscriptionFlow(.purchaseCancelled, parameters: [
+                    "product_id": product.id
+                ])
                 isLoading = false
                 return false
                 
@@ -106,12 +132,22 @@ class SubscriptionManager: ObservableObject {
                 
             @unknown default:
                 error = .unknownError
+                AnalyticsManager.shared.trackSubscriptionFlow(.purchaseFailed, parameters: [
+                    "product_id": product.id,
+                    "error": "unknown_result"
+                ])
                 isLoading = false
                 return false
             }
         } catch {
             self.error = .purchaseFailed(error.localizedDescription)
             print("Purchase error: \(error.localizedDescription)")
+            
+            AnalyticsManager.shared.trackSubscriptionFlow(.purchaseFailed, parameters: [
+                "product_id": product.id,
+                "error": error.localizedDescription
+            ])
+            
             isLoading = false
             return false
         }
@@ -121,11 +157,25 @@ class SubscriptionManager: ObservableObject {
         isLoading = true
         error = nil
         
+        AnalyticsManager.shared.trackSubscriptionFlow(.restoreStarted)
+        
         do {
             try await AppStore.sync()
             await updateSubscriptionStatus()
+            
+            AnalyticsManager.shared.trackSubscriptionFlow(.restoreCompleted)
+            
+            // Track individual restored subscriptions
+            for productID in purchasedProductIDs {
+                AnalyticsManager.shared.trackSubscriptionRestore(productID: productID)
+            }
+            
         } catch {
             self.error = .restoreFailed(error.localizedDescription)
+            
+            AnalyticsManager.shared.trackSubscriptionFlow(.restoreFailed, parameters: [
+                "error": error.localizedDescription
+            ])
         }
         
         isLoading = false
@@ -143,12 +193,21 @@ class SubscriptionManager: ObservableObject {
             }
         }
         
+        let wasSubscribed = self.isSubscribed
         self.purchasedProductIDs = purchasedProducts
         self.isSubscribed = !purchasedProducts.isEmpty
         
         // Update UserDefaults for consistency
         UserDefaults.standard.set(isSubscribed, forKey: "hasActiveSubscription")
         print("SubscriptionManager: Subscription status updated - \(isSubscribed)")
+        
+        if wasSubscribed != isSubscribed {
+            let subscriptionType = purchasedProducts.first.map { getSubscriptionType(from: $0) }
+            AnalyticsManager.shared.setUserSubscriptionStatus(
+                isSubscribed: isSubscribed,
+                subscriptionType: subscriptionType
+            )
+        }
     }
     
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
@@ -186,6 +245,17 @@ class SubscriptionManager: ObservableObject {
             return String(format: "%.2f €", weeklyPrice)
         }
         return product.displayPrice
+    }
+    
+    private func getSubscriptionType(from productID: String) -> String {
+        if productID.contains("annual") {
+            return "yearly"
+        } else if productID.contains("weeklytrial") {
+            return "weekly_trial"
+        } else if productID.contains("weekly") {
+            return "weekly"
+        }
+        return "unknown"
     }
 }
 

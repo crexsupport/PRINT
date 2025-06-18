@@ -100,9 +100,9 @@ struct PaywallView: View {
                         }) {
                             Image(systemName: "xmark")
                                 .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.blue.opacity(0.6))
+                                .foregroundColor(.blue.opacity(0.3))
                                 .frame(width: 44, height: 44)
-                                .background(Color.white.opacity(0.1))
+                                .background(Color.white.opacity(0.05))
                                 .clipShape(Circle())
                         }
                         .padding(.top, 20)
@@ -389,17 +389,23 @@ struct PaywallView: View {
     
     private var purchaseButtonSection: some View {
         VStack(spacing: 16) {
-            // Show "No payment now" only when trial is enabled and trial product is selected
+            // Show different text based on trial state
             if hasTrialEnabled && selectedProductIndex == 1 {
+                // When trial is enabled and trial product is selected
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 14))
                         .foregroundColor(.green)
                     
-                    Text("No payment now")
+                    Text("No payment now. Cancel anytime.")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(.gray)
                 }
+            } else {
+                // When trial is not enabled (regular subscriptions)
+                Text("Auto renewable. Cancel anytime.")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.gray)
             }
             
             Button {
@@ -446,7 +452,9 @@ struct PaywallView: View {
     private var legalLinksSection: some View {
         HStack {
             Button("Terms") {
-                // Handle terms
+                if let url = URL(string: "https://printer.addonsmcpe.website/terms_conditions.html") {
+                    UIApplication.shared.open(url)
+                }
             }
             .font(.system(size: 14))
             .foregroundColor(.gray)
@@ -457,7 +465,9 @@ struct PaywallView: View {
                 .foregroundColor(.gray)
             
             Button("Privacy") {
-                // Handle privacy
+                if let url = URL(string: "https://printer.addonsmcpe.website/privacy_policy.html") {
+                    UIApplication.shared.open(url)
+                }
             }
             .font(.system(size: 14))
             .foregroundColor(.gray)
