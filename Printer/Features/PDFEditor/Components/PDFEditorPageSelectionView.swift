@@ -3,6 +3,11 @@ import SwiftUI
 struct PDFEditorPageSelectionView: View {
     @ObservedObject var viewModel: PDFEditorViewModel
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -55,9 +60,9 @@ struct PDFEditorPageSelectionView: View {
                     
                     Spacer()
                     
-                    // Delete button - Reduced padding to prevent overflow
+                    // Delete button with paywall check
                     Button {
-                        viewModel.deleteSelectedPages()
+                        handleDeleteAction()
                     } label: {
                         HStack(spacing: 6) {
                             Image(systemName: "trash.fill")
@@ -77,6 +82,23 @@ struct PDFEditorPageSelectionView: View {
                 .padding(.vertical, 16) // Proper vertical padding
                 .background(Color(.systemBackground))
             }
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handleDeleteAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with deleting pages
+            viewModel.deleteSelectedPages()
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
         }
     }
     
@@ -187,4 +209,6 @@ struct PDFPageThumbnailView: View {
 
 #Preview {
     PDFEditorPageSelectionView(viewModel: PDFEditorViewModel())
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

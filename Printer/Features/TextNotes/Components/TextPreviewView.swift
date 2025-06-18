@@ -4,6 +4,11 @@ struct TextPreviewView: View {
     @ObservedObject var viewModel: TextNotesViewModel
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             // Background
@@ -69,9 +74,8 @@ struct TextPreviewView: View {
                 .padding(.top, 20)
             }
             
-            // Floating Print button with modern design
             Button {
-                viewModel.printText()
+                handlePrintAction()
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "printer.fill")
@@ -90,6 +94,23 @@ struct TextPreviewView: View {
             .shadow(color: .blue.opacity(0.2), radius: 8, x: 0, y: 4) // Reduced shadow opacity too
         }
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handlePrintAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            viewModel.printText()
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
     }
 }
 
@@ -104,4 +125,6 @@ struct TextPreviewView: View {
         }())
         .navigationTitle("Print Text Notes")
     }
+    .environmentObject(SubscriptionManager())
+    .environmentObject(PaywallManager())
 }

@@ -11,6 +11,10 @@ import UniformTypeIdentifiers
 struct FeatureCard: View {
     let feature: PrinterFeature
     @EnvironmentObject var scannerManager: ScannerManager
+    
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
     // RE-ADD: @State para controlar la presentación modal
     @State private var showingDocumentScannerModal = false
     @State private var showingWebPagesModal = false
@@ -42,7 +46,7 @@ struct FeatureCard: View {
             DocumentScannerView(scannedImages: $scannedImages)
                 .ignoresSafeArea()
         }
-        .sheet(isPresented: $showingDocumentReview) {
+        .fullScreenCover(isPresented: $showingDocumentReview) {
             EnhancedDocumentCollectionView(
                 images: $scannedImages,
                 onSave: {
@@ -56,12 +60,18 @@ struct FeatureCard: View {
                     }
                 }
             )
+            .environmentObject(subscriptionManager)
+            .environmentObject(paywallManager)
         }
         .fullScreenCover(isPresented: $showingWebPagesModal) {
             WebPagesView()
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
         }
         .fullScreenCover(isPresented: $showingPhotoPrintModal) {
             PhotoPrintView(showBackButton: true)
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
         }
         .fullScreenCover(isPresented: $showingTextNotesModal) {
             TextNotesView()
@@ -71,9 +81,13 @@ struct FeatureCard: View {
         }
         .fullScreenCover(isPresented: $showingPDFEditorModal) {
             PDFEditorView()
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
         }
         .fullScreenCover(isPresented: $showingImageToPDFModal) {
             ImageToPDFView()
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
         }
         .fileImporter(
             isPresented: $showingDocumentFileImporter,
@@ -302,4 +316,6 @@ extension URL: Identifiable {
 #Preview {
     FeatureCard(feature: PrinterFeature.mainFeatures.first(where: { $0.title == "Scanner" }) ?? PrinterFeature.mainFeatures[0])
         .environmentObject(ScannerManager())
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

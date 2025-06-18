@@ -16,6 +16,11 @@ struct WebPagesView: View {
 
     @State private var showingPrintOptions = false
 
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+
+    @State private var showingLocalPaywall = false
+
     // MARK: - Body
     var body: some View {
         VStack(spacing: 0) {
@@ -37,12 +42,43 @@ struct WebPagesView: View {
                 title: Text("Print Options"),
                 message: Text("Choose how to print this web page"),
                 buttons: [
-                    .default(Text("Print Current Page")) { webViewManager.printCurrentPage() },
-                    .default(Text("Print Full Website")) { webViewManager.printFullWebsite() },
-                    .default(Text("Save as PDF"))        { webViewManager.saveAsPDF() },
+                    .default(Text("Print Current Page")) { handlePrintCurrentPage() },
+                    .default(Text("Print Full Website")) { handlePrintFullWebsite() },
+                    .default(Text("Save as PDF"))        { handleSaveAsPDF() },
                     .cancel(Text("Cancel"))
                 ]
             )
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handlePrintCurrentPage() {
+        if subscriptionManager.isSubscribed {
+            webViewManager.printCurrentPage()
+        } else {
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func handlePrintFullWebsite() {
+        if subscriptionManager.isSubscribed {
+            webViewManager.printFullWebsite()
+        } else {
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func handleSaveAsPDF() {
+        if subscriptionManager.isSubscribed {
+            webViewManager.saveAsPDF()
+        } else {
+            showingLocalPaywall = true
         }
     }
 }
@@ -236,4 +272,6 @@ private extension WebPagesView {
 
 #Preview {
     WebPagesView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

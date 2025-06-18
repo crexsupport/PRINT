@@ -16,12 +16,17 @@ struct EnhancedDocumentCollectionView: View {
     @State private var showingShareSheet = false
     @State private var showingDeleteAlert = false
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     var body: some View {
         NavigationView {
             VStack {
                 DocumentReviewHeader(
                     onBack: { dismiss() },
-                    onShare: { showingShareSheet = true }
+                    onShare: { handleShareAction() }
                 )
                 
                 if !images.isEmpty {
@@ -36,7 +41,7 @@ struct EnhancedDocumentCollectionView: View {
                     DocumentActionButtons(
                         imageCount: images.count,
                         onAddMore: onAddMore,
-                        onPrint: printDocuments
+                        onPrint: handlePrintAction
                     )
                 } else {
                     DocumentEmptyState(onStartScanning: onAddMore)
@@ -47,6 +52,13 @@ struct EnhancedDocumentCollectionView: View {
             .sheet(isPresented: $showingShareSheet) {
                 ActivityViewController(activityItems: images)
             }
+            .sheet(isPresented: $showingLocalPaywall) {
+                PaywallView(onDismiss: {
+                    showingLocalPaywall = false
+                })
+                .environmentObject(subscriptionManager)
+                .interactiveDismissDisabled(true) // Disable swipe to dismiss
+            }
             .alert("Delete Document", isPresented: $showingDeleteAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete", role: .destructive) {
@@ -55,6 +67,26 @@ struct EnhancedDocumentCollectionView: View {
             } message: {
                 Text("Are you sure you want to delete this document?")
             }
+        }
+    }
+    
+    private func handlePrintAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            printDocuments()
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func handleShareAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with sharing
+            showingShareSheet = true
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
         }
     }
     

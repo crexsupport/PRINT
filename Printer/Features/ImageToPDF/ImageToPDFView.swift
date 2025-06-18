@@ -223,6 +223,11 @@ struct ImageToPDFView: View {
     @StateObject private var viewModel = ImageToPDFViewModel()
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     var body: some View {
         NavigationView {
             Group {
@@ -235,6 +240,8 @@ struct ImageToPDFView: View {
                     ImageToPDFProcessingView(viewModel: viewModel)
                 case .result:
                     ImageToPDFResultView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 }
             }
             .navigationTitle(navigationTitle)
@@ -258,10 +265,9 @@ struct ImageToPDFView: View {
                 
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     if viewModel.currentStep == .result, let url = viewModel.generatedPDFURL {
-                        ShareLink(item: url,
-                                  subject: Text("Generated PDF"),
-                                  message: Text("Check out this PDF created from images"),
-                                  preview: SharePreview("Generated PDF", image: Image(systemName: "doc.fill"))) {
+                        Button {
+                            handleShareAction(url: url)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
@@ -274,6 +280,45 @@ struct ImageToPDFView: View {
             }
         } message: {
             Text(viewModel.errorMessage ?? "")
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handleShareAction(url: URL) {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with sharing
+            shareDocument(url: url)
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func shareDocument(url: URL) {
+        let activityViewController = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        
+        // Get the root view controller to present the share sheet
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first,
+           let rootViewController = window.rootViewController {
+            
+            // Configure for iPad
+            if let popover = activityViewController.popoverPresentationController {
+                popover.sourceView = window
+                popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            
+            rootViewController.present(activityViewController, animated: true)
         }
     }
     
@@ -293,4 +338,6 @@ struct ImageToPDFView: View {
 
 #Preview {
     ImageToPDFView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

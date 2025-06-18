@@ -68,7 +68,7 @@ struct DocumentCollectionView: View {
                         // Document image
                         TabView(selection: $currentPage) {
                             ForEach(0..<images.count, id: \.self) { index in
-                                ZStack { 
+                                ZStack {
                                     Color.white
                                     Image(uiImage: images[index])
                                         .resizable()

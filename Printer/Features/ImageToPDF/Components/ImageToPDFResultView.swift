@@ -9,6 +9,11 @@ struct ImageToPDFResultView: View {
     @State private var saveAlertMessage = ""
     @State private var documentToExport: URL?
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -41,6 +46,13 @@ struct ImageToPDFResultView: View {
             Button("OK", role: .cancel) { }
         } message: {
             Text(saveAlertMessage)
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
         }
     }
     
@@ -92,11 +104,8 @@ struct ImageToPDFResultView: View {
     
     private var bottomButtons: some View {
         VStack(spacing: 12) {
-            // Print button with enhanced design
             Button {
-                if let url = viewModel.generatedPDFURL {
-                    printDocument(url: url)
-                }
+                handlePrintAction()
             } label: {
                 HStack(spacing: 12) {
                     ZStack {
@@ -141,9 +150,7 @@ struct ImageToPDFResultView: View {
             }
             
             Button {
-                if let url = viewModel.generatedPDFURL {
-                    savePDFToFiles(url: url)
-                }
+                handleSaveToFilesAction()
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "folder.badge.plus")
@@ -161,6 +168,30 @@ struct ImageToPDFResultView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 20)
         .background(Color(.systemBackground))
+    }
+    
+    private func handlePrintAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            if let url = viewModel.generatedPDFURL {
+                printDocument(url: url)
+            }
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func handleSaveToFilesAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with saving
+            if let url = viewModel.generatedPDFURL {
+                savePDFToFiles(url: url)
+            }
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
     }
     
     private func printDocument(url: URL) {
@@ -663,4 +694,6 @@ struct EnhancedPDFKitView: UIViewRepresentable {
 
 #Preview {
     ImageToPDFResultView(viewModel: ImageToPDFViewModel())
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

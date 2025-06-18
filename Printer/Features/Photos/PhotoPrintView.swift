@@ -13,6 +13,9 @@ struct PhotoPrintView: View {
     @StateObject private var viewModel = PhotoPrintViewModel()
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
     // NUEVA PROPIEDAD: Para saber si se abrió desde el grid (tiene botón back)
     let showBackButton: Bool
     
@@ -68,6 +71,8 @@ struct PhotoPrintView: View {
                         PhotoSelectionView(viewModel: viewModel)
                     case .photoPreview:
                         PhotoPreviewView(viewModel: viewModel)
+                            .environmentObject(subscriptionManager)
+                            .environmentObject(paywallManager)
                     }
                 }
             }
@@ -111,4 +116,6 @@ struct PhotoPrintView: View {
 // MARK: - Preview
 #Preview {
     PhotoPrintView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

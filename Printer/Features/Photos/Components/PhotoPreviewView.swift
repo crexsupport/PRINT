@@ -4,6 +4,11 @@ struct PhotoPreviewView: View {
     @ObservedObject var viewModel: PhotoPrintViewModel
     @State private var currentIndex = 0
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     private var selectedPhotos: [PhotoItem] {
         viewModel.allPhotos.filter { $0.isSelected }
     }
@@ -25,6 +30,13 @@ struct PhotoPreviewView: View {
             if currentIndex >= newValue {
                 currentIndex = max(0, newValue - 1)
             }
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
         }
     }
     
@@ -174,10 +186,9 @@ struct PhotoPreviewView: View {
                     )
             )
             
-            // Print button
             Button("Print (\(selectedPhotos.count))") {
                 withAnimation(.easeInOut(duration: 0.1)) {
-                    viewModel.printPhotos()
+                    handlePrintAction()
                 }
             }
             .font(.system(size: 17, weight: .semibold))
@@ -197,6 +208,16 @@ struct PhotoPreviewView: View {
             )
         }
         .padding(.horizontal, 20)
+    }
+    
+    private func handlePrintAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            viewModel.printPhotos()
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
     }
     
     private func deletePhoto(photo: PhotoItem) {
@@ -338,5 +359,7 @@ struct PhotoDocumentPageView: View {
 struct PhotoPreviewView_Previews: PreviewProvider {
     static var previews: some View {
         PhotoPreviewView(viewModel: PhotoPrintViewModel())
+            .environmentObject(SubscriptionManager())
+            .environmentObject(PaywallManager())
     }
 }

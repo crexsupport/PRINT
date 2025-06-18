@@ -180,6 +180,11 @@ struct PDFEditorView: View {
     @StateObject private var viewModel = PDFEditorViewModel()
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
+    @State private var showingLocalPaywall = false
+    
     var body: some View {
         NavigationView {
             Group {
@@ -188,10 +193,14 @@ struct PDFEditorView: View {
                     PDFEditorFileSelectionView(viewModel: viewModel)
                 case .pageSelection:
                     PDFEditorPageSelectionView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 case .processing:
                     PDFEditorProcessingView(viewModel: viewModel)
                 case .result:
                     PDFEditorResultView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 }
             }
             .navigationTitle(navigationTitle)
@@ -215,10 +224,9 @@ struct PDFEditorView: View {
                 
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     if viewModel.currentStep == .result, let url = viewModel.processedDocumentURL {
-                        ShareLink(item: url,
-                                  subject: Text("Edited PDF"),
-                                  message: Text("Check out this edited PDF"),
-                                  preview: SharePreview("Edited PDF", image: Image(systemName: "doc.text.fill"))) {
+                        Button {
+                            handleShareAction(url: url)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
@@ -238,6 +246,45 @@ struct PDFEditorView: View {
         } message: {
             Text(viewModel.errorMessage ?? "")
         }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handleShareAction(url: URL) {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with sharing
+            shareDocument(url: url)
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func shareDocument(url: URL) {
+        let activityViewController = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        
+        // Get the root view controller to present the share sheet
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first,
+           let rootViewController = window.rootViewController {
+            
+            // Configure for iPad
+            if let popover = activityViewController.popoverPresentationController {
+                popover.sourceView = window
+                popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            
+            rootViewController.present(activityViewController, animated: true)
+        }
     }
     
     private var navigationTitle: String {
@@ -256,4 +303,6 @@ struct PDFEditorView: View {
 
 #Preview {
     PDFEditorView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }

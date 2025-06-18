@@ -439,6 +439,11 @@ struct BatchPrintView: View {
     @StateObject private var viewModel = BatchPrintViewModel()
     @Environment(\.dismiss) private var dismiss
 
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+
+    @State private var showingLocalPaywall = false
+
     var body: some View {
         NavigationView {
             Group {
@@ -449,8 +454,12 @@ struct BatchPrintView: View {
                     BatchProcessingView(viewModel: viewModel)
                 case .preview:
                     BatchPreviewView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 case .singleFilePreview:
                     SingleFilePreviewView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 }
             }
             .navigationTitle(navigationTitleForCurrentStep())
@@ -473,17 +482,15 @@ struct BatchPrintView: View {
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     if viewModel.currentStep == .preview, let url = viewModel.mergedDocumentURL {
-                        ShareLink(item: url,
-                                  subject: Text(viewModel.mergedDocumentName),
-                                  message: Text("Check out this merged document: \(viewModel.mergedDocumentName)"),
-                                  preview: SharePreview(viewModel.mergedDocumentName, image: Image(systemName: "doc.text.fill"))) {
+                        Button {
+                            handleShareAction(url: url, name: viewModel.mergedDocumentName)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                     } else if viewModel.currentStep == .singleFilePreview, let fileItem = viewModel.fileForSinglePreview {
-                        ShareLink(item: fileItem.url,
-                                  subject: Text(fileItem.fileName),
-                                  message: Text("Check out this document: \(fileItem.fileName)"),
-                                  preview: SharePreview(fileItem.fileName, image: Image(systemName: fileItem.fileType.iconName))) {
+                        Button {
+                            handleShareAction(url: fileItem.url, name: fileItem.fileName)
+                        } label: {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
@@ -497,6 +504,45 @@ struct BatchPrintView: View {
             allowsMultipleSelection: true,
             onCompletion: viewModel.addFile
         )
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+
+    private func handleShareAction(url: URL, name: String) {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with sharing
+            shareDocument(url: url, name: name)
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
+    }
+    
+    private func shareDocument(url: URL, name: String) {
+        let activityViewController = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        
+        // Get the root view controller to present the share sheet
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first,
+           let rootViewController = window.rootViewController {
+            
+            // Configure for iPad
+            if let popover = activityViewController.popoverPresentationController {
+                popover.sourceView = window
+                popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            
+            rootViewController.present(activityViewController, animated: true)
+        }
     }
 
     private func navigationTitleForCurrentStep() -> String {
@@ -911,8 +957,12 @@ struct BatchProcessingView: View {
 // MARK: - Subview: Preview
 struct BatchPreviewView: View {
     @ObservedObject var viewModel: BatchPrintViewModel
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+
     @State private var showingPrintError = false
     @State private var printErrorMessage = ""
+    @State private var showingLocalPaywall = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -930,7 +980,7 @@ struct BatchPreviewView: View {
             }
 
             Button {
-                printDocument()
+                handlePrintAction()
             } label: {
                 Text("Print Document")
                     .font(.headline)
@@ -947,6 +997,23 @@ struct BatchPreviewView: View {
             Button("OK") { }
         } message: {
             Text(printErrorMessage)
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+    }
+    
+    private func handlePrintAction() {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            printDocument()
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
         }
     }
     
@@ -1002,9 +1069,13 @@ struct BatchPreviewView: View {
 // MARK: - Subview: Single File Preview
 struct SingleFilePreviewView: View {
     @ObservedObject var viewModel: BatchPrintViewModel
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+
     @State private var pdfReloadTrigger = UUID()
     @State private var showingPrintError = false
     @State private var printErrorMessage = ""
+    @State private var showingLocalPaywall = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -1043,7 +1114,7 @@ struct SingleFilePreviewView: View {
 
             if let file = viewModel.fileForSinglePreview {
                 Button {
-                    printSingleFile(file)
+                    handlePrintAction(for: file)
                 } label: {
                     Text("Print This File")
                         .font(.headline)
@@ -1057,7 +1128,29 @@ struct SingleFilePreviewView: View {
             }
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+        .alert("Print Error", isPresented: $showingPrintError) {
+            Button("OK") { }
+        } message: {
+            Text(printErrorMessage)
+        }
+        .sheet(isPresented: $showingLocalPaywall) {
+            PaywallView(onDismiss: {
+                showingLocalPaywall = false
+            })
+            .environmentObject(subscriptionManager)
+            .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
         // Navigation bar is handled by the parent BatchPrintView
+    }
+    
+    private func handlePrintAction(for file: BatchFileItem) {
+        if subscriptionManager.isSubscribed {
+            // User is subscribed, proceed with printing
+            printSingleFile(file)
+        } else {
+            // User is not subscribed, show local paywall
+            showingLocalPaywall = true
+        }
     }
     
     private func printSingleFile(_ file: BatchFileItem) {
@@ -1145,5 +1238,7 @@ struct ContentUnavailableView: View {
 struct Preview: PreviewProvider {
     static var previews: some View {
         BatchPrintView()
+            .environmentObject(SubscriptionManager())
+            .environmentObject(PaywallManager())
     }
 }

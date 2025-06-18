@@ -44,6 +44,17 @@ struct PDFDisplayConfiguration {
         maxScaleFactor: 5.0,
         showCompleteDocument: true
     )
+    
+    static let pdfEditorResult = PDFDisplayConfiguration(
+        backgroundColor: UIColor.systemGray6,
+        pageBreakMargins: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
+        displayMode: .singlePageContinuous,
+        displayDirection: .vertical,
+        autoScales: true,
+        minScaleFactor: 0.5,
+        maxScaleFactor: 3.0,
+        showCompleteDocument: true
+    )
 }
 
 // MARK: - PDF View Manager

@@ -4,6 +4,9 @@ struct TextNotesView: View {
     @StateObject private var viewModel = TextNotesViewModel()
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var subscriptionManager: SubscriptionManager
+    @EnvironmentObject private var paywallManager: PaywallManager
+    
     // NUEVA PROPIEDAD: Para saber si se abrió desde el grid (tiene botón back)
     let showBackButton: Bool
     
@@ -59,6 +62,8 @@ struct TextNotesView: View {
                     TextInputView(viewModel: viewModel)
                 } else if viewModel.currentStep == .preview {
                     TextPreviewView(viewModel: viewModel)
+                        .environmentObject(subscriptionManager)
+                        .environmentObject(paywallManager)
                 } else {
                     // Initial state (shouldn't happen with current logic, but keeping as fallback)
                     VStack(spacing: 30) {
@@ -108,4 +113,6 @@ struct TextNotesView: View {
 // MARK: - Preview
 #Preview {
     TextNotesView()
+        .environmentObject(SubscriptionManager())
+        .environmentObject(PaywallManager())
 }
