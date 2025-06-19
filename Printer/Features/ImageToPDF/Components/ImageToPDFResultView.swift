@@ -13,6 +13,7 @@ struct ImageToPDFResultView: View {
     @EnvironmentObject private var paywallManager: PaywallManager
     
     @State private var showingLocalPaywall = false
+    @State private var showingActivitySheet = false
     
     var body: some View {
         ScrollView {
@@ -53,6 +54,11 @@ struct ImageToPDFResultView: View {
             })
             .environmentObject(subscriptionManager)
             .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+        .sheet(isPresented: $showingActivitySheet) {
+            if let url = viewModel.generatedPDFURL {
+                ActivityViewController(activityItems: [url])
+            }
         }
     }
     

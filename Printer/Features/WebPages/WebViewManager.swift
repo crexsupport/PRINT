@@ -7,6 +7,28 @@
 
 import SwiftUI
 import WebKit
+import UniformTypeIdentifiers
+
+struct WebPagePDFDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.pdf] }
+    
+    let data: Data
+    let title: String
+    
+    init(data: Data, title: String) {
+        self.data = data
+        self.title = title
+    }
+    
+    init(configuration: ReadConfiguration) throws {
+        // This shouldn't be called for export
+        throw CocoaError(.fileReadCorruptFile)
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return FileWrapper(regularFileWithContents: data)
+    }
+}
 
 class WebViewManager: NSObject, ObservableObject {
     @Published var url: URL = URL(string: "https://www.google.com")!
@@ -16,6 +38,13 @@ class WebViewManager: NSObject, ObservableObject {
     @Published var urlString = "https://www.google.com"
     @Published var pageTitle = ""
     @Published var isDesktopMode = false
+    
+    @Published var pdfGenerationResult: PDFResult?
+    
+    enum PDFResult {
+        case success(Data)
+        case failure(Error)
+    }
 
     weak var webView: WKWebView?
 
@@ -124,35 +153,36 @@ class WebViewManager: NSObject, ObservableObject {
     }
 
     func saveAsPDF() {
-        guard let webView = webView else { return }
+        guard let webView = webView else { 
+            DispatchQueue.main.async {
+                self.pdfGenerationResult = .failure(NSError(domain: "WebViewManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "WebView not available"]))
+            }
+            return 
+        }
 
         let pdfConfiguration = WKPDFConfiguration()
+        
+        // Configure PDF settings for better quality
+        pdfConfiguration.rect = CGRect.null // Use the entire content
 
         webView.createPDF(configuration: pdfConfiguration) { result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self.savePDFToDocuments(data: data)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    self.pdfGenerationResult = .success(data)
+                    print("PDF generated successfully, size: \(data.count) bytes")
+                case .failure(let error):
+                    self.pdfGenerationResult = .failure(error)
+                    print("PDF generation failed: \(error.localizedDescription)")
                 }
-            case .failure(let error):
-                print("Generación de PDF falló: \(error)")
             }
         }
     }
-
-    private func savePDFToDocuments(data: Data) {
-        // Save PDF to documents directory
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let pdfURL = documentsPath.appendingPathComponent("pagina_web_\(Date().timeIntervalSince1970).pdf")
-
-        do {
-            try data.write(to: pdfURL)
-            print("PDF guardado en: \(pdfURL)")
-            // Show success message or add to printables
-        } catch {
-            print("Error al guardar PDF: \(error)")
-        }
+    
+    func clearPDFResult() {
+        pdfGenerationResult = nil
     }
+
 }
 
 // MARK: - WKNavigationDelegate

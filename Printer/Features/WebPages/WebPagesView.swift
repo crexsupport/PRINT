@@ -20,6 +20,12 @@ struct WebPagesView: View {
     @EnvironmentObject private var paywallManager: PaywallManager
 
     @State private var showingLocalPaywall = false
+    
+    @State private var showingSaveSuccess = false
+    @State private var showingSaveError = false
+    @State private var saveErrorMessage = ""
+    @State private var showingFilePicker = false
+    @State private var pdfDataToSave: Data?
 
     // MARK: - Body
     var body: some View {
@@ -56,6 +62,37 @@ struct WebPagesView: View {
             .environmentObject(subscriptionManager)
             .interactiveDismissDisabled(true) // Disable swipe to dismiss
         }
+        .fileExporter(
+            isPresented: $showingFilePicker,
+            document: pdfDataToSave.map { WebPagePDFDocument(data: $0, title: webViewManager.pageTitle) },
+            contentType: .pdf,
+            defaultFilename: generatePDFFilename()
+        ) { result in
+            switch result {
+            case .success(let url):
+                showingSaveSuccess = true
+                print("PDF saved successfully to: \(url)")
+            case .failure(let error):
+                saveErrorMessage = "Failed to save PDF: \(error.localizedDescription)"
+                showingSaveError = true
+                print("Save error: \(error)")
+            }
+            // Clear the data after use
+            pdfDataToSave = nil
+        }
+        .alert("PDF Saved Successfully", isPresented: $showingSaveSuccess) {
+            Button("OK") { }
+        } message: {
+            Text("Your webpage has been saved as a PDF to your chosen location.")
+        }
+        .alert("Save Failed", isPresented: $showingSaveError) {
+            Button("OK") { }
+        } message: {
+            Text(saveErrorMessage)
+        }
+        .onReceive(webViewManager.$pdfGenerationResult) { result in
+            handlePDFGenerationResult(result)
+        }
     }
     
     private func handlePrintCurrentPage() {
@@ -80,6 +117,35 @@ struct WebPagesView: View {
         } else {
             showingLocalPaywall = true
         }
+    }
+    
+    private func handlePDFGenerationResult(_ result: WebViewManager.PDFResult?) {
+        guard let result = result else { return }
+        
+        switch result {
+        case .success(let data):
+            pdfDataToSave = data
+            showingFilePicker = true
+        case .failure(let error):
+            saveErrorMessage = "Failed to generate PDF: \(error.localizedDescription)"
+            showingSaveError = true
+        }
+        
+        // Clear the result after handling
+        webViewManager.clearPDFResult()
+    }
+    
+    private func generatePDFFilename() -> String {
+        let title = webViewManager.pageTitle.isEmpty ? "webpage" : webViewManager.pageTitle
+        let cleanTitle = title.replacingOccurrences(of: "[^a-zA-Z0-9\\s-_]", with: "", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\\s+", with: "_", options: .regularExpression)
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd_HHmm"
+        let timestamp = formatter.string(from: Date())
+        
+        return "\(cleanTitle)_\(timestamp).pdf"
     }
 }
 

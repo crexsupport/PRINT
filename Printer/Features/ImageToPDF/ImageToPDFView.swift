@@ -227,6 +227,7 @@ struct ImageToPDFView: View {
     @EnvironmentObject private var paywallManager: PaywallManager
     
     @State private var showingLocalPaywall = false
+    @State private var showingActivitySheet = false
     
     var body: some View {
         NavigationView {
@@ -288,6 +289,11 @@ struct ImageToPDFView: View {
             .environmentObject(subscriptionManager)
             .interactiveDismissDisabled(true) // Disable swipe to dismiss
         }
+        .sheet(isPresented: $showingActivitySheet) {
+            if let url = viewModel.generatedPDFURL {
+                ActivityViewController(activityItems: [url])
+            }
+        }
     }
     
     private func handleShareAction(url: URL) {
@@ -301,25 +307,7 @@ struct ImageToPDFView: View {
     }
     
     private func shareDocument(url: URL) {
-        let activityViewController = UIActivityViewController(
-            activityItems: [url],
-            applicationActivities: nil
-        )
-        
-        // Get the root view controller to present the share sheet
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first,
-           let rootViewController = window.rootViewController {
-            
-            // Configure for iPad
-            if let popover = activityViewController.popoverPresentationController {
-                popover.sourceView = window
-                popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
-                popover.permittedArrowDirections = []
-            }
-            
-            rootViewController.present(activityViewController, animated: true)
-        }
+        showingActivitySheet = true
     }
     
     private var navigationTitle: String {
