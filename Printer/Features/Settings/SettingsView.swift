@@ -223,65 +223,16 @@ struct SettingsView: View {
     }
     
     private var modernVersionCard: some View {
-        VStack(spacing: 12) {
-            // App icon placeholder with glassmorphism
-            ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.blue.opacity(0.8),
-                                Color.blue.opacity(0.6),
-                                Color.cyan.opacity(0.4)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 64, height: 64)
-                
-                Image(systemName: "printer.fill")
-                    .font(.system(size: 28, weight: .medium))
-                    .foregroundColor(.white)
-                    .shadow(color: .white.opacity(0.3), radius: 4, x: 0, y: 2)
-            }
-            .shadow(color: Color.blue.opacity(0.3), radius: 12, x: 0, y: 6)
+        VStack(spacing: 6) {
+            Text("Printer Pro")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundColor(.secondary)
             
-            VStack(spacing: 6) {
-                Text("Printer Pro")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
-                
-                Text("Version 1.0.0")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .foregroundColor(.secondary)
-            }
+            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")")
+                .font(.system(size: 12, weight: .regular, design: .rounded))
+                .foregroundColor(.secondary.opacity(0.7))
         }
-        .padding(.vertical, 24)
-        .frame(maxWidth: .infinity)
-        .background(
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(.systemBackground))
-                
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.1),
-                                Color.clear,
-                                Color.blue.opacity(0.02)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.blue.opacity(0.1), lineWidth: 1)
-            }
-        )
-        .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 4)
+        .padding(.vertical, 20)
     }
 
     private var supportItems: [SettingsItem] {

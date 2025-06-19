@@ -96,7 +96,7 @@ struct SplashView: View {
                 
                 // Footer
                 VStack(spacing: 8) {
-                    Text("© 2024 SmartPrinter Solutions")
+                    Text("© 2025 Smart Printer")
                         .font(.system(size: 10, weight: .regular, design: .default))
                         .foregroundColor(.gray.opacity(0.7))
                         .tracking(0.5)
@@ -151,30 +151,26 @@ struct SplashView: View {
 struct ModernLogoContainer: View {
     @State private var innerRotation: Double = 0
     @State private var pulseScale: CGFloat = 1.0
-    @State private var iconOpacity: Double = 0.8
+    @State private var iconOpacity: Double = 0.9
     
     var body: some View {
         ZStack {
-            // Outer frame
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.black.opacity(0.1), lineWidth: 2)
+            // Simple professional container
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.white)
                 .frame(width: 120, height: 120)
-            
-            // Inner rotating element
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.black.opacity(0.05), lineWidth: 1)
-                .frame(width: 80, height: 80)
-                .rotationEffect(.degrees(innerRotation))
-                .animation(
-                    Animation.linear(duration: 15.0)
-                        .repeatForever(autoreverses: false),
-                    value: innerRotation
+                .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.black.opacity(0.05), lineWidth: 1)
                 )
             
-            // Central printer icon - using outline version
-            Image(systemName: "printer")
-                .font(.system(size: 32, weight: .regular, design: .default))
-                .foregroundColor(.black)
+            // Printer image filling the entire container
+            Image("printer_splash")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 110, height: 110)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .opacity(iconOpacity)
                 .scaleEffect(pulseScale)
                 .animation(
@@ -183,14 +179,14 @@ struct ModernLogoContainer: View {
                     value: pulseScale
                 )
                 .animation(
-                    Animation.easeInOut(duration: 1.5)
+                    Animation.easeInOut(duration: 1.8)
                         .repeatForever(autoreverses: true),
                     value: iconOpacity
                 )
         }
         .onAppear {
             innerRotation = 360
-            pulseScale = 1.1
+            pulseScale = 1.02
             iconOpacity = 1.0
         }
     }
@@ -238,40 +234,28 @@ struct ModernProgressIndicator: View {
     let message: String
     
     var body: some View {
-        VStack(spacing: 12) {
-            // Modern progress bar
-            HStack(spacing: 12) {
-                // Invisible spacer to balance the percentage on the right
-                Spacer()
-                    .frame(width: 55)
-                
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(height: 2)
-                    
-                    Rectangle()
-                        .fill(Color.black)
-                        .frame(height: 2)
-                        .scaleEffect(x: progress, y: 1, anchor: .leading)
-                        .animation(.easeInOut(duration: 0.3), value: progress)
+        VStack(spacing: 18) {
+            // Simple professional progress dots
+            HStack(spacing: 8) {
+                ForEach(0..<5, id: \.self) { index in
+                    Circle()
+                        .fill(Double(index) / 5.0 <= progress ? Color.black : Color.gray.opacity(0.25))
+                        .frame(width: 6, height: 6)
+                        .scaleEffect(Double(index) / 5.0 <= progress ? 1.0 : 0.8)
+                        .animation(
+                            .easeInOut(duration: 0.4)
+                            .delay(Double(index) * 0.1),
+                            value: progress
+                        )
                 }
-                .frame(maxWidth: .infinity)
-                
-                Text("\(Int(progress * 100))%")
-                    .font(.system(size: 9, weight: .medium, design: .default))
-                    .foregroundColor(.black)
-                    .tracking(0.5)
-                    .frame(width: 35, alignment: .trailing)
             }
-            .padding(.horizontal, 20)
             
             // Status message
             Text(message.uppercased())
-                .font(.system(size: 10, weight: .regular, design: .default))
-                .foregroundColor(.gray)
+                .font(.system(size: 11, weight: .medium, design: .default))
+                .foregroundColor(.black.opacity(0.6))
                 .tracking(1.0)
-                .animation(.easeInOut(duration: 0.2), value: message)
+                .animation(.easeInOut(duration: 0.3), value: message)
         }
     }
 }

@@ -37,7 +37,7 @@ struct PaywallView: View {
     let features = [
         "Unlimited print",
         "Powerful edit tools",
-        "Support +8000 printers"
+        "Support +9000 printers"
     ]
     
     let testimonials = [
