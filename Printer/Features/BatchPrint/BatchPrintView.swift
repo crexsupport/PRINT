@@ -443,6 +443,8 @@ struct BatchPrintView: View {
     @EnvironmentObject private var paywallManager: PaywallManager
 
     @State private var showingLocalPaywall = false
+    @State private var showingActivitySheet = false
+    @State private var urlToShare: URL?
 
     var body: some View {
         NavigationView {
@@ -511,6 +513,15 @@ struct BatchPrintView: View {
             .environmentObject(subscriptionManager)
             .interactiveDismissDisabled(true) // Disable swipe to dismiss
         }
+        .sheet(isPresented: $showingActivitySheet) {
+            if let url = urlToShare {
+                ActivityViewController(activityItems: [url])
+                    .onDisappear {
+                        // Clear the URL when sheet dismisses
+                        urlToShare = nil
+                    }
+            }
+        }
     }
 
     private func handleShareAction(url: URL, name: String) {
@@ -524,25 +535,17 @@ struct BatchPrintView: View {
     }
     
     private func shareDocument(url: URL, name: String) {
-        let activityViewController = UIActivityViewController(
-            activityItems: [url],
-            applicationActivities: nil
-        )
-        
-        // Get the root view controller to present the share sheet
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first,
-           let rootViewController = window.rootViewController {
-            
-            // Configure for iPad
-            if let popover = activityViewController.popoverPresentationController {
-                popover.sourceView = window
-                popover.sourceRect = CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0)
-                popover.permittedArrowDirections = []
-            }
-            
-            rootViewController.present(activityViewController, animated: true)
+        // Validate that the URL exists and is accessible
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            print("ERROR: File does not exist at path: \(url.path)")
+            return
         }
+        
+        print("DEBUG: Sharing file: \(name) at \(url)")
+        
+        // Store the URL and show the activity sheet
+        urlToShare = url
+        showingActivitySheet = true
     }
 
     private func navigationTitleForCurrentStep() -> String {
@@ -963,6 +966,7 @@ struct BatchPreviewView: View {
     @State private var showingPrintError = false
     @State private var printErrorMessage = ""
     @State private var showingLocalPaywall = false
+    @State private var showingActivitySheet = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -1004,6 +1008,11 @@ struct BatchPreviewView: View {
             })
             .environmentObject(subscriptionManager)
             .interactiveDismissDisabled(true) // Disable swipe to dismiss
+        }
+        .sheet(isPresented: $showingActivitySheet) {
+            if let url = viewModel.mergedDocumentURL {
+                ActivityViewController(activityItems: [url])
+            }
         }
     }
     
