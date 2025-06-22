@@ -9,6 +9,7 @@ import Foundation
 import AppTrackingTransparency
 import AdSupport
 import SwiftUI
+import FirebaseAnalytics
 
 @MainActor
 class ATTManager: ObservableObject {
@@ -46,29 +47,57 @@ class ATTManager: ObservableObject {
     
     /// Request tracking permission using native ATT prompt
     func requestTrackingPermission() async {
-        guard shouldRequestPermission else { 
+        guard shouldRequestPermission else {
             // Even if we don't show prompt, update analytics with current status
-            AnalyticsManager.shared.updateTrackingConsent(isAllowed: isTrackingAllowed)
-            return 
+            setAnalyticsConsent(for: trackingStatus)
+            return
         }
         
-        let status = await ATTrackingManager.requestTrackingAuthorization()
-        
-        await MainActor.run {
-            self.trackingStatus = status
-            self.hasRequestedPermission = true
-            UserDefaults.standard.set(true, forKey: userDefaultsKey)
-            
-            // Configure Firebase Analytics based on permission
-            AnalyticsManager.shared.updateTrackingConsent(isAllowed: isTrackingAllowed)
-            
-            // Track the permission response (this will respect the permission)
-            AnalyticsManager.shared.trackATTPermissionResponse(granted: isTrackingAllowed)
-            
-            print("🔒 ATT Status: \(statusString) - Tracking allowed: \(isTrackingAllowed)")
+        ATTrackingManager.requestTrackingAuthorization { status in
+            Task { @MainActor in // Ensure UI updates are on main thread
+                self.trackingStatus = status
+                self.hasRequestedPermission = true
+                UserDefaults.standard.set(true, forKey: self.userDefaultsKey)
+                
+                self.setAnalyticsConsent(for: status)
+                
+                // Track the permission response (this will respect the permission)
+                AnalyticsManager.shared.trackATTPermissionResponse(granted: self.isTrackingAllowed)
+                
+                print("🔒 ATT Status: \(self.statusString) - Tracking allowed: \(self.isTrackingAllowed)")
+            }
         }
     }
     
+    private func setAnalyticsConsent(for status: ATTrackingManager.AuthorizationStatus) {
+        switch status {
+        case .authorized:
+            Analytics.setAnalyticsCollectionEnabled(true)
+            Analytics.setConsent([
+                .analyticsStorage: .granted,
+                .adStorage: .granted,
+                .adUserData: .granted,
+                .adPersonalization: .granted
+            ])
+        case .denied, .notDetermined, .restricted:
+            Analytics.setAnalyticsCollectionEnabled(false)
+            Analytics.setConsent([
+                .analyticsStorage: .denied,
+                .adStorage: .denied,
+                .adUserData: .denied,
+                .adPersonalization: .denied
+            ])
+        @unknown default:
+            Analytics.setAnalyticsCollectionEnabled(false)
+            Analytics.setConsent([
+                .analyticsStorage: .denied,
+                .adStorage: .denied,
+                .adUserData: .denied,
+                .adPersonalization: .denied
+            ])
+        }
+    }
+
     /// Get user-friendly status string
     var statusString: String {
         switch trackingStatus {

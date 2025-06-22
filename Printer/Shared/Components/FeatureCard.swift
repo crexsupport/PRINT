@@ -144,34 +144,40 @@ struct FeatureCard: View {
     }
     
     private var featureContent: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Spacer()
-                
+        VStack(alignment: .leading, spacing: 3) { // Overall spacing for content elements
+            HStack { // Icon Container
+                Spacer() // Pushes icon to the right
                 Image(systemName: feature.icon)
-                    .font(.system(size: 24))
+                    .font(.system(size: 20)) // Icon size
                     .foregroundColor(.white)
-                    .padding(8)
+                    .padding(5) // Padding inside the icon's background
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(.white.opacity(0.2))
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.white.opacity(0.2))
                     )
             }
-            Spacer()
-            VStack(alignment: .leading, spacing: 4) {
+            .padding(.trailing, 4)
+
+            Spacer(minLength: 2) // Spacer between icon and text
+
+            VStack(alignment: .leading, spacing: 2) { // Text Container
                 Text(feature.title)
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
-                    
+                    .lineLimit(1) // Title on one line
+
                 Text(feature.description)
-                    .font(.caption)
+                    .font(.caption) 
                     .foregroundColor(.white.opacity(0.9))
                     .multilineTextAlignment(.leading)
+                    .lineLimit(1) // Description on one line
             }
+            .padding(.horizontal, 8) 
+            .padding(.bottom, 6)
         }
-        .padding()
-        .frame(height: 120)
+        .padding(6) // Overall padding for the entire content block
+        .frame(height: 120) 
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 15)

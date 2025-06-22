@@ -54,11 +54,12 @@ struct MainFeaturesGridView: View {
                     }
                 }
                 .padding(.horizontal, 20)
+                .padding(.vertical, 10)
                 .tag(pageIndex)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: 250)
+        .frame(height: 272)
         .onChange(of: currentPage) { _, newPage in
             // Notificar cambio de página al indicador externo
             NotificationCenter.default.post(

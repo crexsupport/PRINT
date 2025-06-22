@@ -30,7 +30,7 @@ extension PrinterFeature {
     static let mainFeatures: [PrinterFeature] = [
         PrinterFeature(
             title: "Documents",
-            description: "Print documents from files",
+            description: "Print docs from files",
             icon: "doc.text",
             color: .blue
         ),
@@ -87,7 +87,7 @@ extension PrinterFeature {
         ),
         */
         PrinterFeature(
-            title: "Batch Print...",
+            title: "Batch Print",
             description: "Print multiple PDFs",
             icon: "doc.on.doc",
             color: .purple

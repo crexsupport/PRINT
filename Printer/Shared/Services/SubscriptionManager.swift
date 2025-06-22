@@ -239,12 +239,39 @@ class SubscriptionManager: ObservableObject {
     
     func weeklyPrice(for product: Product) -> String {
         if product.id.contains("annual") {
-            // Calculate weekly price for annual subscription (69.99 / 52 weeks)
-            let annualPrice = 69.99
-            let weeklyPrice = annualPrice / 52
-            return String(format: "%.2f €", weeklyPrice)
+            // Calculate weekly price for annual subscription
+            let annualPriceDecimal = product.price
+            let weeklyPriceDecimal = annualPriceDecimal / 52
+            
+            // Format it to 2 decimal places with the currency symbol
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.locale = product.priceFormatStyle.locale
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+            
+            return formatter.string(from: weeklyPriceDecimal as NSDecimalNumber) ?? product.displayPrice
         }
         return product.displayPrice
+    }
+    
+    func billingPeriodSuffix(for product: Product) -> String {
+        guard let period = product.subscription?.subscriptionPeriod else { return "" }
+        switch period.unit {
+        case .day:
+            // If it's 7 days, consider it a week for simplicity in display, otherwise show days.
+            if period.value == 7 { return "/week" }
+            return period.value == 1 ? "/day" : "/\(period.value) days"
+        case .week:
+            // Always return /week for weekly unit, typically period.value will be 1
+            return "/week"
+        case .month:
+            return period.value == 1 ? "/month" : "/\(period.value) months"
+        case .year:
+            return period.value == 1 ? "/year" : "/\(period.value) years"
+        @unknown default:
+            return ""
+        }
     }
     
     private func getSubscriptionType(from productID: String) -> String {

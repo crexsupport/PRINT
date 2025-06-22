@@ -10,10 +10,10 @@ import StoreKit
 
 struct PaywallView: View {
     @EnvironmentObject var subscriptionManager: SubscriptionManager
-    @State private var selectedProductIndex = 0 // Default to yearly plan
+    @State private var selectedProductIndex = 1 // Default to trial plan if available
     @State private var showCloseButton = false
     @State private var currentSlideIndex = 0 // 0 = features, 1+ = testimonials
-    @State private var hasTrialEnabled = false // Default disabled
+    @State private var hasTrialEnabled = true // Default trial enabled
     @State private var rotationTimer: Timer?
     @State private var showingPurchaseResult = false
     @State private var purchaseResultMessage = ""
@@ -49,63 +49,37 @@ struct PaywallView: View {
     
     var body: some View {
         ZStack {
-            // White background
-            Color.white
-                .ignoresSafeArea()
+            Color.white.ignoresSafeArea()
             
-            // Background printer pattern - static positions
             GeometryReader { geometry in
-                let topAreaHeight = geometry.size.height * 0.4 // Only top 40% of screen
-                
                 ForEach(Array(printerPositions.enumerated()), id: \.offset) { index, printerData in
                     Image("paywall_printer")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .resizable().aspectRatio(contentMode: .fit)
                         .frame(width: printerData.size.width, height: printerData.size.height)
-                        .opacity(printerData.opacity)
-                        .position(x: printerData.position.x, y: printerData.position.y)
-                        .rotationEffect(.degrees(printerData.rotation))
-                        .scaleEffect(printerData.scale)
+                        .opacity(printerData.opacity).position(x: printerData.position.x, y: printerData.position.y)
+                        .rotationEffect(.degrees(printerData.rotation)).scaleEffect(printerData.scale)
                 }
             }
             
             VStack(spacing: 0) {
-                // Header with printer image
                 headerSection
-                
-                // Features or Testimonials
                 contentSection
-                
-                // Subscription options
-                subscriptionOptionsSection
-                
-                // Trial toggle
                 trialToggleSection
-                
-                // Purchase button
+                subscriptionOptionsSection
                 purchaseButtonSection
-                
-                // Legal links
                 legalLinksSection
             }
             .padding(.horizontal, 20)
             
-            // Close button overlay with bluish color and reduced opacity
             VStack {
                 HStack {
                     if showCloseButton {
-                        Button(action: {
-                            print("Close button tapped - calling dismiss callback")
-                            onDismiss()
-                        }) {
+                        Button(action: { onDismiss() }) {
                             Image(systemName: "xmark")
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.blue.opacity(0.3))
-                                .frame(width: 44, height: 44)
-                                .background(Color.white.opacity(0.05))
-                                .clipShape(Circle())
+                                .font(.system(size: 16, weight: .medium)).foregroundColor(.blue.opacity(0.3))
+                                .frame(width: 44, height: 44).background(Color.white.opacity(0.05)).clipShape(Circle())
                         }
-                        .padding(.top, 20)
+                        .padding(.top, 40)
                         .padding(.leading, 20)
                     }
                     Spacer()
@@ -117,368 +91,264 @@ struct PaywallView: View {
         .task {
             await subscriptionManager.loadProducts()
             startRotationTimer()
-            
-            // Show close button after 3.5 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    showCloseButton = true
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) { // Close button delay
+                withAnimation(.easeInOut(duration: 0.3)) { showCloseButton = true }
             }
         }
         .onAppear {
-            // Generate static positions only once
-            if printerPositions.isEmpty {
-                generateStaticPrinterPositions()
-            }
-        }
-        .onDisappear {
-            rotationTimer?.invalidate()
-            rotationTimer = nil
-        }
-        .alert("Purchase Result", isPresented: $showingPurchaseResult) {
-            Button("OK") {
-                if subscriptionManager.isSubscribed {
-                    onDismiss()
-                }
-            }
-        } message: {
-            Text(purchaseResultMessage)
-        }
-        .onChange(of: hasTrialEnabled) { oldValue, newValue in
-            if newValue {
-                selectedProductIndex = 1
+            if printerPositions.isEmpty { generateStaticPrinterPositions() }
+            // Ensure selectedProductIndex reflects trial state on appear
+            if hasTrialEnabled && subscriptionManager.weeklyTrialProduct != nil {
+                selectedProductIndex = 1 // Trial
+            } else if subscriptionManager.annualProduct != nil {
+                selectedProductIndex = 0 // Annual
             } else {
-                selectedProductIndex = 0
+                selectedProductIndex = 2 // Weekly (fallback)
             }
+        }
+        .onDisappear { rotationTimer?.invalidate(); rotationTimer = nil }
+        .alert("Purchase Result", isPresented: $showingPurchaseResult) {
+            Button("OK") { if subscriptionManager.isSubscribed { onDismiss() } }
+        } message: { Text(purchaseResultMessage) }
+        .onChange(of: hasTrialEnabled) { _, newValue in
+             // When trial is enabled, select trial product (index 1)
+             // When trial is disabled, select annual product (index 0)
+            selectedProductIndex = newValue ? 1 : 0
         }
     }
     
     private var headerSection: some View {
         VStack(spacing: 15) {
-            // Use the custom printer image instead of SF Symbol
-            Image("paywall_printer")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 140, height: 140)
-                .padding(.top, 60)
-            
-            // Title
-            Text("Unlock All Features")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(.black)
-                .multilineTextAlignment(.center)
-        }
-        .padding(.bottom, 20)
+            Image("paywall_printer").resizable().aspectRatio(contentMode: .fit)
+                .frame(width: 140, height: 140).padding(.top, 60)
+            Text("UNLOCK ALL FEATURES").font(.system(size: 23, weight: .bold))
+                .foregroundColor(.black).multilineTextAlignment(.center)
+        }.padding(.bottom, 20)
     }
     
     private var contentSection: some View {
         Group {
-            if currentSlideIndex == 0 {
-                featuresSection
-            } else {
-                testimonialsSection
-            }
+            if currentSlideIndex == 0 { featuresSection } else { testimonialsSection }
         }
     }
     
     private var featuresSection: some View {
-        VStack(spacing: 10) { // REDUCED from 12 to 10
-            // Show ALL features at once
+        VStack(spacing: 10) {
             ForEach(features.indices, id: \.self) { index in
                 HStack(spacing: 12) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16)) // REDUCED from 18 to 16
-                        .foregroundColor(.blue)
-                    
-                    Text(features[index])
-                        .font(.system(size: 14, weight: .medium)) // REDUCED from 15 to 14
-                        .foregroundColor(.black)
-                    
+                    Image(systemName: "checkmark.circle.fill").font(.system(size: 16)).foregroundColor(.blue)
+                    Text(features[index]).font(.system(size: 14, weight: .medium)).foregroundColor(.black)
                     Spacer()
                 }
             }
-            
-            // Pagination dots
             HStack(spacing: 4) {
-                ForEach(0..<(1 + testimonials.count), id: \.self) { index in
-                    Circle()
-                        .fill(index == currentSlideIndex ? .blue : .gray.opacity(0.4))
-                        .frame(width: 5, height: 5)
-                        .scaleEffect(index == currentSlideIndex ? 1.1 : 1.0)
+                ForEach(0..<(1 + testimonials.count), id: \.self) { idx in
+                    Circle().fill(idx == currentSlideIndex ? .blue : .gray.opacity(0.4))
+                        .frame(width: 5, height: 5).scaleEffect(idx == currentSlideIndex ? 1.1 : 1.0)
                         .animation(.easeInOut(duration: 0.3), value: currentSlideIndex)
                 }
-            }
-            .padding(.top, 8)
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16) // REDUCED from 18 to 16
-        .background(Color.blue.opacity(0.05))
-        .cornerRadius(16)
-        .padding(.bottom, 25)
+            }.padding(.top, 8)
+        }.padding(.horizontal, 20).padding(.vertical, 16)
+        .background(Color.blue.opacity(0.05)).cornerRadius(16).padding(.bottom, 25)
     }
     
     private var testimonialsSection: some View {
         VStack(spacing: 16) {
-            // Star rating
+            HStack(spacing: 4) { ForEach(0..<5, id: \.self) { _ in Image(systemName: "star.fill").font(.system(size: 16)).foregroundColor(.orange) } }
+            Text(testimonials[currentSlideIndex - 1].0).font(.system(size: 16)).foregroundColor(.gray).multilineTextAlignment(.center).lineLimit(3)
+            Text(testimonials[currentSlideIndex - 1].1).font(.system(size: 14, weight: .medium)).foregroundColor(.black)
             HStack(spacing: 4) {
-                ForEach(0..<5, id: \.self) { _ in
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 16))
-                        .foregroundColor(.orange)
-                }
-            }
-            
-            // Testimonial text
-            Text(testimonials[currentSlideIndex - 1].0)
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .lineLimit(3)
-            
-            // Author
-            Text(testimonials[currentSlideIndex - 1].1)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.black)
-            
-            // Pagination dots
-            HStack(spacing: 4) {
-                ForEach(0..<(1 + testimonials.count), id: \.self) { index in
-                    Circle()
-                        .fill(index == currentSlideIndex ? .blue : .gray.opacity(0.4))
-                        .frame(width: 5, height: 5)
-                        .scaleEffect(index == currentSlideIndex ? 1.1 : 1.0)
+                ForEach(0..<(1 + testimonials.count), id: \.self) { idx in
+                    Circle().fill(idx == currentSlideIndex ? .blue : .gray.opacity(0.4))
+                        .frame(width: 5, height: 5).scaleEffect(idx == currentSlideIndex ? 1.1 : 1.0)
                         .animation(.easeInOut(duration: 0.3), value: currentSlideIndex)
                 }
-            }
-            .padding(.top, 8)
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 18) // MADE CONSISTENT with features section
-        .background(Color.blue.opacity(0.05))
-        .cornerRadius(16)
-        .padding(.bottom, 25)
+            }.padding(.top, 8)
+        }.padding(.horizontal, 20).padding(.vertical, 18)
+        .background(Color.blue.opacity(0.05)).cornerRadius(16).padding(.bottom, 25)
     }
-    
+
+    private var trialToggleSection: some View {
+        HStack {
+            Text("Enable Free Trial").font(.system(size: 15, weight: .medium)).foregroundColor(.black)
+            Spacer()
+            Toggle("", isOn: $hasTrialEnabled).tint(.blue).scaleEffect(0.9)
+        }.padding(.horizontal, 14).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.1)))
+        .padding(.bottom, 15)
+    }
+
     private var subscriptionOptionsSection: some View {
         VStack(spacing: 10) {
-            // Annual plan
-            subscriptionOptionCard(
-                title: "Yearly Plan",
-                price: subscriptionManager.annualProduct?.displayPrice ?? "€69.99",
-                weeklyPrice: subscriptionManager.annualProduct != nil ? subscriptionManager.weeklyPrice(for: subscriptionManager.annualProduct!) : "€1.35",
-                subtitle: "per week",
-                isSelected: selectedProductIndex == 0,
-                showCheckmark: selectedProductIndex == 0,
-                isHighlighted: selectedProductIndex == 0
-            ) {
-                selectedProductIndex = 0
-                hasTrialEnabled = false
+            if let annualProduct = subscriptionManager.annualProduct {
+                subscriptionOptionCard(product: annualProduct, productType: .annual, isSelected: selectedProductIndex == 0) {
+                    selectedProductIndex = 0
+                    hasTrialEnabled = false // Selecting annual disables trial toggle
+                }
             }
-            
-            // Weekly plan (shown when trial is disabled)
-            if !hasTrialEnabled {
-                subscriptionOptionCard(
-                    title: "Weekly Plan",
-                    price: subscriptionManager.weeklyProduct?.displayPrice ?? "€9.99",
-                    weeklyPrice: subscriptionManager.weeklyProduct?.displayPrice ?? "€9.99",
-                    subtitle: "per week",
-                    isSelected: selectedProductIndex == 2,
-                    showCheckmark: selectedProductIndex == 2
-                ) {
-                    selectedProductIndex = 2
+
+            if hasTrialEnabled {
+                if let weeklyTrialProduct = subscriptionManager.weeklyTrialProduct {
+                    subscriptionOptionCard(product: weeklyTrialProduct, productType: .weeklyTrial, isSelected: selectedProductIndex == 1) {
+                        selectedProductIndex = 1
+                        // hasTrialEnabled remains true
+                    }
                 }
             } else {
-                // Weekly trial plan (shown when trial is enabled)
-                subscriptionOptionCard(
-                    title: "3-day free",
-                    price: subscriptionManager.weeklyTrialProduct?.displayPrice ?? "€9.99",
-                    weeklyPrice: "then, " + (subscriptionManager.weeklyTrialProduct?.displayPrice ?? "€9.99"),
-                    subtitle: "per week",
-                    isSelected: selectedProductIndex == 1,
-                    showCheckmark: selectedProductIndex == 1
-                ) {
-                    selectedProductIndex = 1
+                if let weeklyProduct = subscriptionManager.weeklyProduct {
+                     subscriptionOptionCard(product: weeklyProduct, productType: .weeklyNoTrial, isSelected: selectedProductIndex == 2) {
+                        selectedProductIndex = 2
+                        // hasTrialEnabled remains false
+                    }
                 }
             }
         }
         .padding(.bottom, 15)
     }
-    
-    private func subscriptionOptionCard(
-        title: String,
-        price: String,
-        weeklyPrice: String,
-        subtitle: String,
-        isSelected: Bool,
-        showCheckmark: Bool,
-        isHighlighted: Bool = false,
-        action: @escaping () -> Void
-    ) -> some View {
+
+    enum ProductCardType { case annual, weeklyTrial, weeklyNoTrial }
+
+    private func subscriptionOptionCard(product: Product, productType: ProductCardType, isSelected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: {
             action()
             Task {
                 await handlePurchase()
             }
         }) {
-            HStack {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundColor(.black)
+            HStack(spacing: 8) { // Added spacing for overall HStack
+                // Left Column
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(titleForProduct(productType: productType, hasTrialEnabled: hasTrialEnabled))
+                        .font(.system(size: 14, weight: .semibold)) // Adjusted title font
+                        .foregroundColor(Color.black.opacity(0.75))
                     
-                    Text(price)
-                        .font(.system(size: 13))
-                        .foregroundColor(.gray)
+                    Text(priceStringForProduct(product: product, productType: productType, hasTrialEnabled: hasTrialEnabled))
+                        .font(.system(size: 12, weight: .regular)) // Adjusted price font
+                        .foregroundColor(Color.gray)
                 }
-                
+                .padding(.vertical, 5) // Add some vertical padding to left column text
+
                 Spacer()
-                
-                VStack(alignment: .trailing, spacing: 3) {
-                    Text(weeklyPrice)
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundColor(.black)
-                    
-                    Text(subtitle)
-                        .font(.system(size: 13))
-                        .foregroundColor(.gray)
+
+                // Right Column
+                VStack(alignment: .trailing, spacing: 4) {
+                    if productType == .annual {
+                        Text("BEST OFFER")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(isSelected ? Color.blue : Color.gray.opacity(0.7))
+                            .cornerRadius(4)
+                        Text(subscriptionManager.weeklyPrice(for: product) + "/week" )
+                            .font(.system(size: 11, weight: .regular))
+                            .foregroundColor(Color.gray)
+                    } else if productType == .weeklyTrial {
+                        Text("3 DAYS FREE")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.blue)
+                            .cornerRadius(4)
+                        // No secondary price text here as per image
+                    } else { // weeklyNoTrial
+                        // This space will now be empty for weeklyNoTrial on the right, as per implied design.
+                        // If something else should go here, it needs to be specified.
+                    }
                 }
-                
-                if showCheckmark {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.blue)
-                        .padding(.leading, 8)
-                }
+                 .padding(.vertical, 5) // Add some vertical padding to right column text
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+            .padding(.vertical, 10) // Slightly reduced overall vertical padding
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isHighlighted ? Color.blue : (isSelected ? Color.blue : Color.gray.opacity(0.3)), lineWidth: isSelected ? 2 : 1)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.white)
-                    )
+                    .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: isSelected ? 2 : 1.5) // Bolder selected border
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
             )
         }
         .buttonStyle(PlainButtonStyle())
-        .disabled(subscriptionManager.isLoading)
-        .opacity(subscriptionManager.isLoading ? 0.7 : 1.0)
     }
-    
-    private var trialToggleSection: some View {
-        HStack {
-            Text("Enable Free Trial")
-                .font(.system(size: 15, weight: .medium))
-                .foregroundColor(.black)
-            
-            Spacer()
-            
-            Toggle("", isOn: $hasTrialEnabled)
-                .tint(.blue)
-                .scaleEffect(0.9)
+
+    // Helper to get title based on product type and trial state
+    private func titleForProduct(productType: ProductCardType, hasTrialEnabled: Bool) -> String {
+        switch productType {
+        case .annual:
+            return "YEARLY ACCESS"
+        case .weeklyTrial:
+            return "FIRST 3 DAYS FREE"
+        case .weeklyNoTrial:
+            return "WEEKLY ACCESS"
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.1))
-        )
-        .padding(.bottom, 15)
     }
-    
+
+    // Helper to get price string based on product type and trial state
+    private func priceStringForProduct(product: Product, productType: ProductCardType, hasTrialEnabled: Bool) -> String {
+        let periodSuffix = subscriptionManager.billingPeriodSuffix(for: product)
+        switch productType {
+        case .annual:
+            return product.displayPrice + periodSuffix
+        case .weeklyTrial:
+            return "then " + product.displayPrice + periodSuffix
+        case .weeklyNoTrial:
+            return product.displayPrice + periodSuffix
+        }
+    }
+
     private var purchaseButtonSection: some View {
-        VStack(spacing: 16) {
-            // Show different text based on trial state
-            if hasTrialEnabled && selectedProductIndex == 1 {
-                // When trial is enabled and trial product is selected
+        VStack(spacing: 8) { // Reduced spacing
+            Button { Task { await handlePurchase() } } label: {
                 HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 14))
-                        .foregroundColor(.green)
-                    
-                    Text("No payment now. Cancel anytime.")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.gray)
-                }
-            } else {
-                // When trial is not enabled (regular subscriptions)
-                Text("Auto renewable. Cancel anytime.")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.gray)
-            }
-            
-            Button {
-                Task {
-                    await handlePurchase()
-                }
-            } label: {
-                HStack {
-                    if subscriptionManager.isLoading {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                            .tint(.white)
-                    }
-                    
-                    Text(buttonText)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                    if subscriptionManager.isLoading { ProgressView().scaleEffect(0.8).tint(.white) }
+                    Text(buttonText).font(.system(size: 18, weight: .semibold)).foregroundColor(.white)
+                }.frame(maxWidth: .infinity).padding(.vertical, 18) // Taller button
                 .background(
                     LinearGradient(
                         gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
+                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 3)
                 )
                 .cornerRadius(12)
+            }.disabled(subscriptionManager.isLoading).opacity(subscriptionManager.isLoading ? 0.7 : 1.0)
+            
+            Group { // Grouping for consistent font and color
+                if hasTrialEnabled && selectedProductIndex == 1 {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill").font(.system(size: 13)).foregroundColor(.green)
+                        Text("NO PAYMENT NOW")
+                    }
+                } else {
+                    Text("Auto renewable. Cancel anytime.")
+                }
             }
-            .disabled(subscriptionManager.isLoading)
-            .opacity(subscriptionManager.isLoading ? 0.7 : 1.0)
+            .font(.system(size: 11, weight: .medium)) // Adjusted font size
+            .foregroundColor(.gray)
+            
         }
+        .padding(.top, 10)
         .padding(.bottom, 16)
     }
     
     private var buttonText: String {
-        if hasTrialEnabled && selectedProductIndex == 1 {
-            return "Start Free Trial"
-        } else {
-            return "Continue"
-        }
+        if hasTrialEnabled && selectedProductIndex == 1 { return "TRY FOR FREE" } // Changed CTA
+        else { return "CONTINUE" }
     }
     
     private var legalLinksSection: some View {
-        HStack {
-            Button("Terms") {
-                if let url = URL(string: "https://printer.addonsmcpe.website/terms_conditions.html") {
-                    UIApplication.shared.open(url)
-                }
+        HStack(spacing: 8) { // Added spacing
+            Button(action: { if let url = URL(string: "https://printer.addonsmcpe.website/terms_conditions.html") { UIApplication.shared.open(url) } }) {
+                Text("Terms").font(.system(size: 13, weight: .regular)).underline().foregroundColor(.gray)
             }
-            .font(.system(size: 14))
-            .foregroundColor(.gray)
-            .underline()
-            
-            Text("&")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-            
-            Button("Privacy") {
-                if let url = URL(string: "https://printer.addonsmcpe.website/privacy_policy.html") {
-                    UIApplication.shared.open(url)
-                }
+            Text("&").font(.system(size: 13, weight: .regular)).foregroundColor(.gray)
+            Button(action: { if let url = URL(string: "https://printer.addonsmcpe.website/privacy_policy.html") { UIApplication.shared.open(url) } }) {
+                Text("Privacy").font(.system(size: 13, weight: .regular)).underline().foregroundColor(.gray)
             }
-            .font(.system(size: 14))
-            .foregroundColor(.gray)
-            .underline()
-            
-            Text("|")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-            
-            Button("Restore purchase") {
+            Text("|").font(.system(size: 13, weight: .regular)).foregroundColor(.gray)
+            Button(action: {
                 Task {
+                    // FIX: Corrected the method call to subscriptionManager.restorePurchases()
                     await subscriptionManager.restorePurchases()
                     if subscriptionManager.isSubscribed {
                         purchaseResultMessage = "Purchases restored successfully!"
@@ -488,120 +358,74 @@ struct PaywallView: View {
                         showingPurchaseResult = true
                     }
                 }
+            }) {
+                Text("Restore").font(.system(size: 13, weight: .regular)).underline().foregroundColor(.gray)
             }
-            .font(.system(size: 14))
-            .foregroundColor(.gray)
-            .underline()
-        }
-        .padding(.bottom, 30)
+        }.padding(.bottom, 30)
     }
     
     private func startRotationTimer() {
         rotationTimer?.invalidate()
-        
-        rotationTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { timer in
+        rotationTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
             withAnimation(.easeInOut(duration: 0.8)) {
-                // Cycle through: features (0) -> testimonial 1 (1) -> testimonial 2 (2) -> etc.
-                let totalSlides = 1 + testimonials.count
-                currentSlideIndex = (currentSlideIndex + 1) % totalSlides
+                currentSlideIndex = (currentSlideIndex + 1) % (1 + testimonials.count)
             }
         }
     }
     
     private func handlePurchase() async {
-        let selectedProduct: Product?
-        
+        let productToPurchase: Product?
         switch selectedProductIndex {
-        case 0:
-            selectedProduct = subscriptionManager.annualProduct
-        case 1:
-            selectedProduct = subscriptionManager.weeklyTrialProduct
-        case 2:
-            selectedProduct = subscriptionManager.weeklyProduct
-        default:
-            selectedProduct = subscriptionManager.annualProduct
+        case 0: productToPurchase = subscriptionManager.annualProduct
+        case 1: productToPurchase = subscriptionManager.weeklyTrialProduct
+        case 2: productToPurchase = subscriptionManager.weeklyProduct
+        default: productToPurchase = nil
         }
         
-        guard let product = selectedProduct else {
+        guard let product = productToPurchase else {
             purchaseResultMessage = "Product not available. Please try again."
             showingPurchaseResult = true
             return
         }
         
         let success = await subscriptionManager.purchase(product)
-        
+
         if success {
             purchaseResultMessage = "Purchase successful! You now have access to all premium features."
             showingPurchaseResult = true
-        } else if let error = subscriptionManager.error {
-            switch error {
-            case .userCancelled:
-                // Don't show alert for user cancellation
-                break
-            default:
-                purchaseResultMessage = error.localizedDescription
+        } else {
+            if let currentError = subscriptionManager.error {
+                if case .userCancelled = currentError {
+                } else {
+                    purchaseResultMessage = currentError.localizedDescription
+                    showingPurchaseResult = true
+                }
+            } else {
+                purchaseResultMessage = "An unknown error occurred during purchase."
                 showingPurchaseResult = true
             }
         }
     }
     
-    private func generateNonOverlappingPositions(count: Int, width: CGFloat, height: CGFloat, minDistance: CGFloat) -> [CGPoint] {
-        var positions: [CGPoint] = []
-        let maxAttempts = 100
-        
-        for _ in 0..<count {
-            var attempts = 0
-            var newPosition: CGPoint
-            
-            repeat {
-                newPosition = CGPoint(
-                    x: CGFloat.random(in: minDistance...(width - minDistance)),
-                    y: CGFloat.random(in: minDistance...(height - minDistance))
-                )
-                attempts += 1
-            } while attempts < maxAttempts && positions.contains { position in
-                let distance = sqrt(pow(newPosition.x - position.x, 2) + pow(newPosition.y - position.y, 2))
-                return distance < minDistance
-            }
-            
-            if attempts < maxAttempts {
-                positions.append(newPosition)
-            }
-        }
-        
-        return positions
-    }
-    
     private func generateStaticPrinterPositions() {
-        let count = 12
-        let minDistance: CGFloat = 50
-        
-        // Use screen bounds as default size
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height * 0.4 // Top 40%
-        
-        let positions = generateNonOverlappingPositions(
-            count: count,
-            width: screenWidth,
-            height: screenHeight,
-            minDistance: minDistance
-        )
-        
-        printerPositions = positions.map { position in
-            PrinterPosition(
-                position: position,
-                size: CGSize(
-                    width: CGFloat.random(in: 24...32),
-                    height: CGFloat.random(in: 24...32)
-                ),
-                opacity: Double.random(in: 0.04...0.08),
-                rotation: Double.random(in: -15...15),
-                scale: Double.random(in: 0.8...1.2)
-            )
+        let count = 12; let minDistance: CGFloat = 50
+        let screenWidth = UIScreen.main.bounds.width; let screenHeight = UIScreen.main.bounds.height * 0.4
+        let positions = generateNonOverlappingPositions(count: count, width: screenWidth, height: screenHeight, minDistance: minDistance)
+        printerPositions = positions.map { PrinterPosition(position: $0, size: CGSize(width: CGFloat.random(in: 24...32), height: CGFloat.random(in: 24...32)), opacity: Double.random(in: 0.04...0.08), rotation: Double.random(in: -15...15), scale: Double.random(in: 0.8...1.2)) }
+    }
+
+    private func generateNonOverlappingPositions(count: Int, width: CGFloat, height: CGFloat, minDistance: CGFloat) -> [CGPoint] {
+        var positions: [CGPoint] = []; let maxAttempts = 100
+        for _ in 0..<count {
+            var attempts = 0; var newPosition: CGPoint
+            repeat {
+                newPosition = CGPoint(x: CGFloat.random(in: minDistance...(width - minDistance)), y: CGFloat.random(in: minDistance...(height - minDistance)))
+                attempts += 1
+            } while attempts < maxAttempts && positions.contains { pos in sqrt(pow(newPosition.x - pos.x, 2) + pow(newPosition.y - pos.y, 2)) < minDistance }
+            if attempts < maxAttempts { positions.append(newPosition) }
         }
+        return positions
     }
 }
 
-#Preview {
-    PaywallView()
-}
+#Preview { PaywallView().environmentObject(SubscriptionManager()) }
