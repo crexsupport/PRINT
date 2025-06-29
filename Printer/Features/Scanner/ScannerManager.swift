@@ -51,15 +51,28 @@ class ScannerManager: NSObject, ObservableObject {
     }
     
     deinit {
-        stopEverything()
-    }
-    
-    private func stopEverything() {
+        // Ensure the session is stopped safely.
+        // The stop() method should have been called from the view's onDisappear.
+        // This is a fallback.
+        if captureSession?.isRunning == true {
+            captureSession?.stopRunning()
+        }
         detectionTimer?.invalidate()
         autoCaptureTimer?.invalidate()
+    }
+    
+    // This should be called from the view's onDisappear.
+    func stop() {
+        detectionTimer?.invalidate()
+        detectionTimer = nil
+        autoCaptureTimer?.invalidate()
+        autoCaptureTimer = nil
         
-        DispatchQueue.global().async {
-            self.captureSession?.stopRunning()
+        // Stop the session on a background thread to avoid blocking the main thread.
+        if captureSession?.isRunning == true {
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.captureSession?.stopRunning()
+            }
         }
     }
     

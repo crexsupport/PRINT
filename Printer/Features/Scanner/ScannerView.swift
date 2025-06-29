@@ -205,6 +205,9 @@ struct ScannerView: View {
         .onAppear {
             scannerManager.checkCameraPermission()
         }
+        .onDisappear {
+            scannerManager.stop()
+        }
         
         // ESTE .sheet AHORA ES PARA DocumentScannerView (el escáner nativo)
         .sheet(isPresented: $showingDocumentScanner) {

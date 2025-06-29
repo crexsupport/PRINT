@@ -132,7 +132,12 @@ struct SelectDocumentView: View {
             case .failure(let error):
                 viewModel.selectFile(from: .failure(error))
                 if error.localizedDescription.contains("cancelled") || error.localizedDescription.contains("canceled") {
-                    dismiss()
+                    // FIX: Delay dismissal to prevent crash when cancelling file importer.
+                    // This is a race condition where the view is dismissed before the
+                    // document picker controller has fully cleaned up its delegate proxy.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        dismiss()
+                    }
                 }
             }
         }
