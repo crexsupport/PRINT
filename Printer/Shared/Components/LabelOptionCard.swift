@@ -9,10 +9,11 @@ import SwiftUI
 
 struct LabelOptionCard: View {
     let option: LabelOption
+    @State private var showLabelCreation = false
     
     var body: some View {
         Button(action: {
-            // Label option action
+            showLabelCreation = true
         }) {
             HStack(spacing: 10) {
                 Image(systemName: option.icon)
@@ -33,6 +34,9 @@ struct LabelOptionCard: View {
             )
         }
         .buttonStyle(PlainButtonStyle())
+        .fullScreenCover(isPresented: $showLabelCreation) {
+            LabelCreationView()
+        }
     }
 }
 

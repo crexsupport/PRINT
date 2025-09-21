@@ -21,11 +21,11 @@ struct PDFEditorFileSelectionView: View {
             
             // Title and description
             VStack(spacing: 12) {
-                Text("Delete PDF Pages")
+                Text(String(localized: "Delete PDF Pages"))
                     .font(.title2)
                     .fontWeight(.bold)
                 
-                Text("Remove single or multiple pages\nIdentify redundant pages quickly")
+                Text(String(localized: "Remove single or multiple pages\nIdentify redundant pages quickly"))
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -39,7 +39,7 @@ struct PDFEditorFileSelectionView: View {
             Button {
                 viewModel.isShowingFilePicker = true
             } label: {
-                Text("Choose file")
+                Text(String(localized: "Choose file"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)

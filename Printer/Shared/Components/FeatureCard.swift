@@ -25,7 +25,9 @@ struct FeatureCard: View {
     @State private var showingBatchPrintModal = false
     @State private var showingPDFEditorModal = false
     @State private var showingImageToPDFModal = false
+    @State private var showingPrintablesModal = false
     @State private var showingCompressPDFModal = false
+    @State private var showingLabelsModal = false
     
     // AÑADIDO: Para mostrar la vista de revisión después del escaneo
     @State private var showingDocumentReview = false
@@ -89,6 +91,16 @@ struct FeatureCard: View {
                 .environmentObject(subscriptionManager)
                 .environmentObject(paywallManager)
         }
+        .fullScreenCover(isPresented: $showingPrintablesModal) {
+            PrintablesView()
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
+        }
+        .fullScreenCover(isPresented: $showingLabelsModal) {
+            LabelCreationView()
+                .environmentObject(subscriptionManager)
+                .environmentObject(paywallManager)
+        }
         .fileImporter(
             isPresented: $showingDocumentFileImporter,
             allowedContentTypes: [UTType.pdf, UTType.rtf, UTType.text, UTType.jpeg, UTType.png, UTType.heic],
@@ -113,27 +125,31 @@ struct FeatureCard: View {
     
     private func handleFeatureTap() {
         switch feature.title {
-        case "Scanner":
+        case String(localized: "Scanner"):
             scannedImages.removeAll()
             showingDocumentScannerModal = true
-        case "Web Pages":
+        case String(localized: "Web Pages"):
             showingWebPagesModal = true
-        case "Documents": // Assuming the title is "Documents"
+        case String(localized: "Documents"): // Assuming the title is "Documents"
             showingDocumentFileImporter = true
-        case "Photos":
+        case String(localized: "Photos"):
             showingPhotoPrintModal = true
-        case "Text Notes":
+        case String(localized: "Text Notes"):
             showingTextNotesModal = true
+        case String(localized: "Labels"):
+            showingLabelsModal = true
         /*
         case "Remove Background":
             showingRemoveBackgroundModal = true
         */
-        case "Batch Print", "Batch Print...":
+        case String(localized: "Batch Print"), String(localized: "Batch Print..."):
             showingBatchPrintModal = true
-        case "PDF Editor":
+        case String(localized: "PDF Editor"):
             showingPDFEditorModal = true
-        case "Image to PDF":
+        case String(localized: "Image to PDF"):
             showingImageToPDFModal = true
+        case String(localized: "Printables"):
+            showingPrintablesModal = true
         /*
         case "Compress PDF":
             showingCompressPDFModal = true
@@ -144,45 +160,79 @@ struct FeatureCard: View {
     }
     
     private var featureContent: some View {
-        VStack(alignment: .leading, spacing: 3) { // Overall spacing for content elements
-            HStack { // Icon Container
-                Spacer() // Pushes icon to the right
+        cardContent
+            .background(cardBackground)
+    }
+    
+    private var cardContent: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
                 Image(systemName: feature.icon)
-                    .font(.system(size: 20)) // Icon size
-                    .foregroundColor(.white)
-                    .padding(5) // Padding inside the icon's background
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.white.opacity(0.2))
-                    )
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(feature.color)
+                    .frame(width: 34, height: 34)
+                    .background(feature.color.opacity(0.10))
+                    .clipShape(RoundedRectangle(cornerRadius: 9))
+                
+                Spacer()
             }
-            .padding(.trailing, 4)
-
-            Spacer(minLength: 2) // Spacer between icon and text
-
-            VStack(alignment: .leading, spacing: 2) { // Text Container
+            .padding(.top, 14)
+            .padding(.leading, 14)
+            
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 4) {
                 Text(feature.title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .lineLimit(1) // Title on one line
-
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.primary.opacity(0.80))
+                    .lineLimit(1)
+                
                 Text(feature.description)
-                    .font(.caption) 
-                    .foregroundColor(.white.opacity(0.9))
+                    .font(.system(size: 11, weight: .regular))
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
                     .multilineTextAlignment(.leading)
-                    .lineLimit(1) // Description on one line
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, 8) 
-            .padding(.bottom, 6)
+            .padding(.horizontal, 14)
+            .padding(.bottom, 14)
         }
-        .padding(6) // Overall padding for the entire content block
-        .frame(height: 120) 
+        .frame(height: 110)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(feature.color.gradient)
-        )
+    }
+    
+    private var cardBackground: some View {
+        ZStack {
+            // Base relief background (como WelcomeBannerView)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white, location: 0.0),
+                            .init(color: Color.white, location: 0.97),
+                            .init(color: Color.gray.opacity(0.05), location: 1.0)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .stroke(Color.gray.opacity(0.30), lineWidth: 0.5)
+                .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 5)
+                .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 2)
+            
+            // Overlay de color de la feature (como WelcomeBannerView)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            feature.color.opacity(0.10), // Más oscuro arriba-izquierda
+                            feature.color.opacity(0.05)  // Un poco más oscuro abajo-derecha
+                        ],
+                        startPoint: UnitPoint(x: 0.0, y: 0.0),
+                        endPoint: UnitPoint(x: 0.7, y: 0.7)
+                    )
+                )
+        }
     }
 }
 
@@ -206,7 +256,7 @@ struct DocumentViewerModal: View {
                                 .font(.system(size: 50))
                                 .foregroundColor(.gray)
                             
-                            Text("Loading Document...")
+                            Text(String(localized: "Loading Document..."))
                                 .font(.headline)
                                 .foregroundColor(.gray)
                         }
@@ -234,7 +284,7 @@ struct DocumentViewerModal: View {
                 Button {
                     printDocument()
                 } label: {
-                    Text("Print Document")
+                    Text(String(localized: "Print Document"))
                         .font(.headline)
                         .padding(.horizontal, 30)
                         .padding(.vertical, 12)
@@ -267,8 +317,8 @@ struct DocumentViewerModal: View {
             }
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
-        .alert("Print Status", isPresented: $showingPrintAlert) {
-            Button("OK", role: .cancel) { }
+        .alert(String(localized: "Print Status"), isPresented: $showingPrintAlert) {
+            Button(String(localized: "OK"), role: .cancel) { }
         } message: {
             Text(printAlertMessage)
         }
@@ -279,7 +329,7 @@ struct DocumentViewerModal: View {
         
         // Check if printing is available
         guard UIPrintInteractionController.isPrintingAvailable else {
-            printAlertMessage = "Printing is not available on this device."
+            printAlertMessage = String(localized: "Printing is not available on this device.")
             showingPrintAlert = true
             return
         }
@@ -300,11 +350,11 @@ struct DocumentViewerModal: View {
             DispatchQueue.main.async {
                 if let error = error {
                     print("Print error: \(error.localizedDescription)")
-                    self.printAlertMessage = "Print failed: \(error.localizedDescription)"
+                    self.printAlertMessage = String(localized: "Print failed: \(error.localizedDescription)")
                     self.showingPrintAlert = true
                 } else if completed {
                     print("Print job completed successfully")
-                    self.printAlertMessage = "Document sent to printer successfully!"
+                    self.printAlertMessage = String(localized: "Document sent to printer successfully!")
                     self.showingPrintAlert = true
                 } else {
                     print("Print job was cancelled")
@@ -319,9 +369,20 @@ extension URL: Identifiable {
     public var id: String { absoluteString }
 }
 
+// Extensión para obtener los componentes RGB de un Color
+extension Color {
+    var components: (red: Double, green: Double, blue: Double, opacity: Double) {
+        // Para esta implementación simplificada, usaremos valores aproximados
+        // En una implementación más completa, se podría usar UIColor para extraer los componentes reales
+        return (red: 0.5, green: 0.5, blue: 0.5, opacity: 1.0) // Valores por defecto
+    }
+}
+
 #Preview {
     FeatureCard(feature: PrinterFeature.mainFeatures.first(where: { $0.title == "Scanner" }) ?? PrinterFeature.mainFeatures[0])
         .environmentObject(ScannerManager())
         .environmentObject(SubscriptionManager())
         .environmentObject(PaywallManager())
+        .padding()
+        .background(Color.white)
 }

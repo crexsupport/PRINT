@@ -51,12 +51,12 @@ struct PDFEditorResultView: View {
             
             // Success text
             VStack(spacing: 6) {
-                Text("Pages Deleted Successfully")
+                Text(String(localized: "Pages Deleted Successfully"))
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                 
-                Text("Removed \(viewModel.selectedPagesCount) page\(viewModel.selectedPagesCount == 1 ? "" : "s") from your PDF")
+                Text(String(localized: "Removed \(viewModel.selectedPagesCount) page\(viewModel.selectedPagesCount == 1 ? "" : "s") from your PDF"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -73,12 +73,12 @@ struct PDFEditorResultView: View {
             // Document header
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("YOUR EDITED PDF")
+                    Text(String(localized: "YOUR EDITED PDF"))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(.secondary)
                     
-                    Text("Document Preview")
+                    Text(String(localized: "Document Preview"))
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
@@ -91,7 +91,7 @@ struct PDFEditorResultView: View {
                     Image(systemName: "doc.fill")
                         .font(.system(size: 12))
                         .foregroundColor(.red)
-                    Text("PDF")
+                    Text(String(localized: "PDF"))
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(.red)
@@ -118,7 +118,7 @@ struct PDFEditorResultView: View {
                     Image(systemName: "doc.text.fill")
                         .font(.system(size: 48))
                         .foregroundColor(.gray)
-                    Text("Preview Unavailable")
+                    Text(String(localized: "Preview Unavailable"))
                         .font(.headline)
                         .foregroundColor(.gray)
                 }
@@ -146,7 +146,7 @@ struct PDFEditorResultView: View {
                             .foregroundColor(.white)
                     }
                     
-                    Text("Print Document")
+                    Text(String(localized: "Print Document"))
                         .font(.system(size: 17, weight: .semibold))
                 }
                 .foregroundColor(.white)
@@ -171,7 +171,7 @@ struct PDFEditorResultView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 16))
                         .foregroundColor(.blue)
-                    Text("Edit Another PDF")
+                    Text(String(localized: "Edit Another PDF"))
                         .font(.system(size: 16, weight: .medium))
                 }
                 .foregroundColor(.blue)

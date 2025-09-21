@@ -2,7 +2,7 @@
 //  SubscriptionManager.swift
 //  Printer
 //
-//  Created by AI Assistant on 17/6/25.
+//  Created by Pol on 17/6/25.
 //
 
 import Foundation
@@ -260,15 +260,15 @@ class SubscriptionManager: ObservableObject {
         switch period.unit {
         case .day:
             // If it's 7 days, consider it a week for simplicity in display, otherwise show days.
-            if period.value == 7 { return "/week" }
-            return period.value == 1 ? "/day" : "/\(period.value) days"
+            if period.value == 7 { return String(localized: "/week") }
+            return period.value == 1 ? String(localized: "/day") : String(localized: "/\(period.value) days")
         case .week:
             // Always return /week for weekly unit, typically period.value will be 1
-            return "/week"
+            return String(localized: "/week")
         case .month:
-            return period.value == 1 ? "/month" : "/\(period.value) months"
+            return period.value == 1 ? String(localized: "/month") : String(localized: "/\(period.value) months")
         case .year:
-            return period.value == 1 ? "/year" : "/\(period.value) years"
+            return period.value == 1 ? String(localized: "/year") : String(localized: "/\(period.value) years")
         @unknown default:
             return ""
         }

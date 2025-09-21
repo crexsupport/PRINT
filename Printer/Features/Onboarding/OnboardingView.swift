@@ -16,42 +16,43 @@ struct OnboardingView: View {
     
     private let pages: [OnboardingPage] = [
         OnboardingPage(
-            image: "onboarding_printer",
-            title: "Professional Printing",
-            subtitle: "Solutions",
-            description: "Transform your mobile device into a powerful printing hub with enterprise-grade features and precision.",
+            image: "onb_1",
+            title: String(localized: "Print Documents & Photos"),
+            subtitle: "",
+            description: String(localized: "Print documents and photos from your device wirelessly to any compatible printer."),
             isReview: false
         ),
         OnboardingPage(
-            image: "onboarding_documents",
-            title: "Advanced Document",
-            subtitle: "Management",
-            description: "Handle complex documents with professional editing tools, batch processing, and intelligent organization.",
+            image: "onb_2",
+            title: String(localized: "Advanced Document Editing"),
+            subtitle: "",
+            description: String(localized: "Edit, compress, and organize your PDFs with professional-grade tools."),
             isReview: false
         ),
         OnboardingPage(
-            image: "onboarding_wireless",
-            title: "Seamless Wireless",
-            subtitle: "Integration",
-            description: "Connect instantly to any printer with zero configuration. Cloud printing and network discovery included.",
+            image: "onb_3",
+            title: String(localized: "Wireless Printing Made Easy"),
+            subtitle: "",
+            description: String(localized: "Connect to any printer instantly. No setup required, just print and go."),
             isReview: false
         ),
         OnboardingPage(
             image: "",
-            title: "Love Printer?",
+            title: String(localized: "Love Printer?"),
             subtitle: "",
-            description: "Join thousands of professionals who trust our printing solutions for their daily workflow needs.",
+            description: String(localized: "Join thousands of professionals who trust our printing solutions for their daily workflow needs."),
             isReview: true
         )
     ]
     
     var body: some View {
         ZStack {
-            // Premium background
+            // More subtle blue gradient background
             LinearGradient(
                 colors: [
+                    Color.blue.opacity(0.08),
+                    Color.blue.opacity(0.04),
                     Color.white,
-                    Color.blue.opacity(0.01),
                     Color.white
                 ],
                 startPoint: .top,
@@ -60,63 +61,127 @@ struct OnboardingView: View {
             .ignoresSafeArea()
             
             if pages[currentPage].isReview {
-                // Special layout for reviews page - full screen
+                // Special layout for reviews page
                 VStack(spacing: 0) {
-                    // Progress indicators for reviews
-                    HStack(spacing: 8) {
-                        ForEach(0..<pages.count, id: \.self) { index in
-                            Circle()
-                                .fill(index == currentPage ? Color.blue : Color.gray.opacity(0.15))
-                                .frame(width: index == currentPage ? 10 : 6, height: index == currentPage ? 10 : 6)
-                                .animation(.easeInOut(duration: 0.3), value: currentPage)
-                        }
-                    }
-                    .padding(.top, 50)
-                    .padding(.bottom, 20)
-                    
-                    // Reviews content - takes all remaining space
+                    // Reviews content - takes most of the space
                     ReviewsPageView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-            } else {
-                // Normal layout for other pages
-                VStack(spacing: 0) {
-                    // Clean progress indicators
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .trailing).combined(with: .opacity),
+                            removal: .move(edge: .leading).combined(with: .opacity)
+                        ))
+                    
+                    // Page indicators for review page - matching reference style
                     HStack(spacing: 8) {
                         ForEach(0..<pages.count, id: \.self) { index in
-                            Circle()
-                                .fill(index == currentPage ? Color.blue : Color.gray.opacity(0.15))
-                                .frame(width: index == currentPage ? 10 : 6, height: index == currentPage ? 10 : 6)
-                                .animation(.easeInOut(duration: 0.3), value: currentPage)
+                            if index == currentPage {
+                                // Active indicator - elongated
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.blue)
+                                    .frame(width: 24, height: 8)
+                            } else {
+                                // Inactive indicators - small circles
+                                Circle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(width: 8, height: 8)
+                            }
                         }
                     }
-                    .padding(.top, 60)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 140)
+                    .animation(.easeInOut(duration: 0.3), value: currentPage)
+                }
+            } else {
+                // Normal layout for onboarding pages
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: 80)
                     
-                    // Content area
-                    ZStack {
-                        ForEach(0..<pages.count, id: \.self) { index in
-                            if index == currentPage {
-                                OnboardingPageView(page: pages[index])
+                    // Image container with fixed height to keep text position consistent
+                    VStack(spacing: 0) {
+                        // Fixed container for image area (360px to accommodate largest image)
+                        ZStack {
+                            // Animated content for each page
+                            ForEach(0..<pages.count, id: \.self) { index in
+                                if index == currentPage && !pages[index].isReview {
+                                    VStack(spacing: 30) {
+                                        // Image section
+                                        Group {
+                                            if pages[index].image == "onb_2" {
+                                                Image(pages[index].image)
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(width: 320, height: 320)
+                                                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 8)
+                                            } else {
+                                                Image(pages[index].image)
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .frame(width: 280, height: 280)
+                                                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 8)
+                                            }
+                                        }
+                                        
+                                        // Text content
+                                        VStack(spacing: 12) {
+                                            Text(pages[index].title)
+                                                .font(.system(size: 28, weight: .bold))
+                                                .foregroundColor(.black)
+                                                .multilineTextAlignment(.center)
+                                                .lineLimit(nil)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .padding(.horizontal, 32)
+                                            
+                                            Text(pages[index].description)
+                                                .font(.system(size: 16))
+                                                .foregroundColor(.gray)
+                                                .multilineTextAlignment(.center)
+                                                .lineSpacing(2)
+                                                .lineLimit(nil)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .padding(.horizontal, 40)
+                                        }
+                                    }
                                     .transition(.asymmetric(
                                         insertion: .move(edge: .trailing).combined(with: .opacity),
                                         removal: .move(edge: .leading).combined(with: .opacity)
                                     ))
+                                }
+                            }
+                        }
+                        .frame(height: 500) // Increased height to accommodate text
+                        
+                        Spacer()
+                            .frame(minHeight: 30) // Reduced since text is now inside the container
+                    }
+                    
+                    // Page indicators at bottom - matching reference style
+                    HStack(spacing: 8) {
+                        ForEach(0..<pages.count, id: \.self) { index in
+                            if index == currentPage {
+                                // Active indicator - elongated
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.blue)
+                                    .frame(width: 24, height: 8)
+                            } else {
+                                // Inactive indicators - small circles
+                                Circle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(width: 8, height: 8)
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .animation(.easeInOut(duration: 0.4), value: currentPage)
+                    .padding(.bottom, 140)
+                    .animation(.easeInOut(duration: 0.3), value: currentPage)
                 }
             }
             
-            // Continue button - floating for all pages
+            // Continue button - floating at bottom
             VStack {
                 Spacer()
                 
                 Button(action: {
                     if currentPage < pages.count - 1 {
-                        withAnimation(.easeInOut(duration: 0.4)) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
                             currentPage += 1
                         }
                     } else {
@@ -124,7 +189,7 @@ struct OnboardingView: View {
                     }
                 }) {
                     HStack(spacing: 12) {
-                        Text("Continue")
+                        Text(String(localized: "Continue"))
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(.white)
                         
@@ -136,22 +201,23 @@ struct OnboardingView: View {
                     .frame(height: 56)
                     .background(
                         LinearGradient(
-                            colors: [Color.blue, Color.blue.opacity(0.8)],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                            gradient: Gradient(colors: [
+                                Color(red: 0.3, green: 0.6, blue: 0.95),
+                                Color(red: 0.15, green: 0.4, blue: 0.8)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
                         )
                     )
-                    .cornerRadius(28)
-                    .shadow(
-                        color: .blue.opacity(pages[currentPage].isReview ? 0.3 : 0.25),
-                        radius: pages[currentPage].isReview ? 16 : 12,
-                        x: 0,
-                        y: pages[currentPage].isReview ? 8 : 4
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color(red: 0.1, green: 0.3, blue: 0.7).opacity(0.4), lineWidth: 1)
                     )
+                    .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 2)
                 }
-                .padding(.horizontal, pages[currentPage].isReview ? 40 : 32)
-                .padding(.bottom, pages[currentPage].isReview ? 50 : 70)
-                .animation(.easeInOut(duration: 0.4), value: currentPage)
+                .padding(.horizontal, 32)
+                .padding(.bottom, 50)
             }
         }
         .onAppear {
@@ -183,6 +249,7 @@ struct OnboardingPage {
     let subtitle: String
     let description: String
     let isReview: Bool
+    var isVisible: Bool = true
     
     init(image: String, title: String, subtitle: String, description: String, isReview: Bool = false) {
         self.image = image
@@ -199,73 +266,42 @@ struct OnboardingPageView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Minimal top spacer
-            Spacer().frame(height: 20)
+            Spacer()
+                .frame(height: 80)
             
-            // Image section with premium styling
-            VStack(spacing: 15) {
-                ZStack {
-                    // Subtle background circle
-                    Circle()
-                        .fill(Color.blue.opacity(0.03))
-                        .frame(width: 220, height: 220)
-                    
-                    // Main image
-                    Image(page.image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 170, height: 170)
-                        .shadow(color: .black.opacity(0.05), radius: 24, x: 0, y: 8)
-                }
+            // Image section
+            Image(page.image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 280, height: 280)
                 .scaleEffect(isVisible ? 1.0 : 0.9)
                 .opacity(isVisible ? 1.0 : 0.0)
                 .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: isVisible)
-            }
             
-            // Reduced spacer
-            Spacer().frame(height: 25)
+            Spacer()
+                .frame(height: 50)
             
-            // Text content with professional spacing
-            VStack(spacing: 14) {
-                VStack(spacing: 4) {
-                    Text(page.title)
-                        .font(.system(size: 26, weight: .bold))
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .offset(y: isVisible ? 0 : 20)
-                        .opacity(isVisible ? 1.0 : 0.0)
-                        .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.2), value: isVisible)
-                    
-                    if !page.subtitle.isEmpty {
-                        Text(page.subtitle)
-                            .font(.system(size: 27, weight: .light))
-                            .foregroundColor(.blue)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .offset(y: isVisible ? 0 : 20)
-                            .opacity(isVisible ? 1.0 : 0.0)
-                            .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.25), value: isVisible)
-                    }
-                }
+            // Text content
+            VStack(spacing: 12) {
+                Text(page.title)
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 32)
                 
                 Text(page.description)
                     .font(.system(size: 16))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(4)
+                    .lineSpacing(2)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 35)
-                    .offset(y: isVisible ? 0 : 30)
-                    .opacity(isVisible ? 1.0 : 0.0)
-                    .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.3), value: isVisible)
+                    .padding(.horizontal, 40)
             }
             
-            // Bottom spacer - reserving space for floating button
-            Spacer().frame(minHeight: 130)
+            Spacer()
         }
         .onAppear {
             withAnimation {
@@ -306,9 +342,12 @@ struct ReviewsPageView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // Compact title section
+                Spacer()
+                    .frame(height: 80)
+                
+                // Title section
                 VStack(spacing: 8) {
-                    Text("Love Printer?")
+                    Text(String(localized: "Love Printer?"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
@@ -316,19 +355,18 @@ struct ReviewsPageView: View {
                         .opacity(isVisible ? 1.0 : 0.0)
                         .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.1), value: isVisible)
                     
-                    Text("Join thousands of professionals who trust our solutions")
-                        .font(.system(size: 15))
-                        .foregroundColor(.secondary)
+                    Text(String(localized: "Join thousands of professionals who trust our solutions"))
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
                         .offset(y: isVisible ? 0 : 20)
                         .opacity(isVisible ? 1.0 : 0.0)
                         .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.2), value: isVisible)
                 }
-                .padding(.top, 16)
-                .padding(.bottom, 16)
+                .padding(.bottom, 20)
                 
-                // Compact stars
+                // Stars
                 HStack(spacing: 6) {
                     ForEach(1...5, id: \.self) { index in
                         Image(systemName: "star.fill")
@@ -343,15 +381,15 @@ struct ReviewsPageView: View {
                 .background(Color.gray.opacity(0.05))
                 .cornerRadius(12)
                 .padding(.horizontal, 40)
-                .padding(.bottom, 16)
+                .padding(.bottom, 20)
                 .offset(y: isVisible ? 0 : 30)
                 .opacity(isVisible ? 1.0 : 0.0)
                 .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.4), value: isVisible)
                 
-                // Social proof with testimonials immediately visible
+                // Social proof with testimonials
                 VStack(spacing: 12) {
                     HStack(spacing: 8) {
-                        Text("Trusted by")
+                        Text(String(localized: "Trusted by"))
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.black)
                         
@@ -373,7 +411,7 @@ struct ReviewsPageView: View {
                             }
                         }
                         
-                        Text("5,000+ users")
+                        Text(String(localized: "5,000+ users"))
                             .font(.system(size: 13))
                             .foregroundColor(.secondary)
                             .padding(.leading, 6)
@@ -385,7 +423,7 @@ struct ReviewsPageView: View {
                     .opacity(isVisible ? 1.0 : 0.0)
                     .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.5), value: isVisible)
                     
-                    // All testimonials visible immediately
+                    // Testimonials
                     VStack(spacing: 10) {
                         ForEach(Array(testimonials.enumerated()), id: \.element.id) { index, testimonial in
                             CompactTestimonialCard(testimonial: testimonial)
@@ -396,12 +434,12 @@ struct ReviewsPageView: View {
                     }
                     .padding(.horizontal, 40)
                     
-                    // Compact benefits
+                    // Benefits
                     VStack(spacing: 8) {
                         HStack {
                             Text("🖨️")
                                 .font(.system(size: 14))
-                            Text("\"Works with any printer - no setup required\"")
+                            Text(String(localized: "\"Works with any printer - no setup required\""))
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                                 .italic()
@@ -411,7 +449,7 @@ struct ReviewsPageView: View {
                         HStack {
                             Text("📄")
                                 .font(.system(size: 14))
-                            Text("\"Professional document editing and compression\"")
+                            Text(String(localized: "\"Professional document editing and compression\""))
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                                 .italic()
@@ -421,7 +459,7 @@ struct ReviewsPageView: View {
                         HStack {
                             Text("⚡")
                                 .font(.system(size: 14))
-                            Text("\"Lightning fast printing with perfect quality\"")
+                            Text(String(localized: "\"Lightning fast printing with perfect quality\""))
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                                 .italic()
@@ -435,8 +473,7 @@ struct ReviewsPageView: View {
                     .animation(.spring(response: 0.6, dampingFraction: 0.8).delay(0.8), value: isVisible)
                 }
                 
-                // Bottom spacing to avoid floating button overlap
-                Spacer().frame(height: 120)
+                Spacer()
             }
         }
         .onAppear {

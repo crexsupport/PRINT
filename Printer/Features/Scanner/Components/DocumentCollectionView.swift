@@ -28,7 +28,7 @@ struct DocumentCollectionView: View {
                     
                     Spacer()
                     
-                    Text("Photo Print")
+                    Text(String(localized: "Photo Print"))
                         .font(.headline)
                         .fontWeight(.semibold)
                     
@@ -136,7 +136,7 @@ struct DocumentCollectionView: View {
                     
                     // Bottom buttons
                     HStack(spacing: 20) {
-                        Button("Add") {
+                        Button(String(localized: "Add")) {
                             dismiss()
                         }
                         .font(.headline)
@@ -148,7 +148,7 @@ struct DocumentCollectionView: View {
                                 .stroke(Color.blue, lineWidth: 2)
                         )
                         
-                        Button("Print(\(images.count))") {
+                        Button(String(localized: "Print(\(images.count))")) {
                             // Print all documents
                             onSave()
                         }
@@ -170,11 +170,11 @@ struct DocumentCollectionView: View {
                             .font(.system(size: 50))
                             .foregroundColor(.gray)
                         
-                        Text("No documents scanned")
+                        Text(String(localized: "No documents scanned"))
                             .font(.headline)
                             .foregroundColor(.gray)
                         
-                        Text("Capture some documents to see them here")
+                        Text(String(localized: "Capture some documents to see them here"))
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)

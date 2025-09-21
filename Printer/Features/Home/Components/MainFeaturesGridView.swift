@@ -37,16 +37,13 @@ struct MainFeaturesGridView: View {
         TabView(selection: $currentPage) {
             ForEach(0..<numberOfPages, id: \.self) { pageIndex in
                 LazyVGrid(columns: [
-                    GridItem(.flexible(), spacing: 10),
-                    GridItem(.flexible(), spacing: 10)
-                ], spacing: 12) {
+                    GridItem(.flexible(), spacing: 12),
+                    GridItem(.flexible(), spacing: 12)
+                ], spacing: 15) {
                     ForEach(0..<featuresPerPage, id: \.self) { index in
                         if index < featuresPages[pageIndex].count {
                             FeatureCard(feature: featuresPages[pageIndex][index])
                                 .frame(maxWidth: .infinity)
-                                // Sombras sutiles
-                                .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
-                                .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
                         } else {
                             Color.clear
                                 .frame(height: 120)
@@ -54,12 +51,14 @@ struct MainFeaturesGridView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 10)
+                .padding(.top, 8) // Solo padding top reducido
+                .padding(.bottom, 20) // Mantener padding bottom para las sombras
                 .tag(pageIndex)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .frame(height: 272)
+        .frame(height: 290) // Más altura para acomodar las sombras
+        .clipped() // Evita que las sombras se extiendan fuera del contenedor
         .onChange(of: currentPage) { _, newPage in
             // Notificar cambio de página al indicador externo
             NotificationCenter.default.post(

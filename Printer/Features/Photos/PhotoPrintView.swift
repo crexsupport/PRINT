@@ -37,7 +37,7 @@ struct PhotoPrintView: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "chevron.left")
                                     .font(.system(size: 16, weight: .medium))
-                                Text("Back")
+                                Text(String(localized: "Back"))
                                     .font(.system(size: 16))
                             }
                             .foregroundColor(.blue)
@@ -45,14 +45,14 @@ struct PhotoPrintView: View {
                         
                         Spacer()
                         
-                        Text("Print Photos")
+                        Text(String(localized: "Print Photos"))
                             .font(.headline)
                             .fontWeight(.semibold)
                         
                         Spacer()
                         
                         // Invisible button for balance
-                        Button("Back") {
+                        Button(String(localized: "Back")) {
                             // Empty action
                         }
                         .opacity(0)
@@ -104,11 +104,11 @@ struct PhotoPrintView: View {
     private func navigationTitleForCurrentStep() -> String {
         switch viewModel.currentStep {
         case .permissionRequest:
-            return "Photo Print"
+            return String(localized: "Photo Print")
         case .photoSelection:
-            return "Recents"
+            return String(localized: "Recents")
         case .photoPreview:
-            return "Photo Print"
+            return String(localized: "Photo Print")
         }
     }
 }

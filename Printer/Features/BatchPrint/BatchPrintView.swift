@@ -95,7 +95,7 @@ class BatchPrintViewModel: ObservableObject {
     @Published var mergedDocumentURL: URL?
     @Published var mergedDocumentName: String = ""
     @Published var processingProgress: Double = 0.0
-    @Published var processingStatusText: String = "Preparing..."
+    @Published var processingStatusText: String = String(localized: "Preparing...")
     @Published var fileForSinglePreview: BatchFileItem? = nil
 
     let maxFiles = 10
@@ -127,7 +127,7 @@ class BatchPrintViewModel: ObservableObject {
 
         currentStep = .processing
         processingProgress = 0.0
-        processingStatusText = "Preparing to merge..."
+        processingStatusText = String(localized: "Preparing to merge...")
 
         DispatchQueue.global(qos: .userInitiated).async {
             let mergedPdf = PDFDocument()
@@ -139,7 +139,7 @@ class BatchPrintViewModel: ObservableObject {
 
             for (index, fileItem) in self.selectedFiles.enumerated() {
                 DispatchQueue.main.async {
-                    self.processingStatusText = "Processing: \(fileItem.fileName) (\(index + 1) of \(totalFiles))"
+                    self.processingStatusText = String(localized: "Processing: \(fileItem.fileName) (\(index + 1) of \(totalFiles))")
                     self.processingProgress = (Double(index) / Double(totalFiles)) * 0.8
                 }
 
@@ -211,7 +211,7 @@ class BatchPrintViewModel: ObservableObject {
             print("DEBUG: Merge complete. Processed \(processedFiles) files, total pages: \(totalPagesAdded)")
 
             DispatchQueue.main.async {
-                self.processingStatusText = "Finalizing and saving merged PDF..."
+                self.processingStatusText = String(localized: "Finalizing and saving merged PDF...")
                 self.processingProgress = 0.85
             }
 
@@ -219,7 +219,7 @@ class BatchPrintViewModel: ObservableObject {
             guard mergedPdf.pageCount > 0 else {
                 print("ERROR: No pages were added to the merged PDF")
                 DispatchQueue.main.async {
-                    self.processingStatusText = "Error: No pages were successfully processed."
+                    self.processingStatusText = String(localized: "Error: No pages were successfully processed.")
                     self.currentStep = .fileSelection
                 }
                 return
@@ -240,13 +240,13 @@ class BatchPrintViewModel: ObservableObject {
                     self.mergedDocumentURL = outputUrl
                     self.mergedDocumentName = outputFileName
                     self.processingProgress = 1.0
-                    self.processingStatusText = "Merge successful! \(totalPagesAdded) pages merged."
+                    self.processingStatusText = String(localized: "Merge successful! \(totalPagesAdded) pages merged.")
                     self.currentStep = .preview
                 }
             } else {
                 print("ERROR: Failed to save merged PDF to disk")
                 DispatchQueue.main.async {
-                    self.processingStatusText = "Error: Failed to save merged PDF."
+                    self.processingStatusText = String(localized: "Error: Failed to save merged PDF.")
                     self.currentStep = .fileSelection
                 }
             }
@@ -405,7 +405,7 @@ class BatchPrintViewModel: ObservableObject {
             currentStep = .fileSelection
             // Reset progress if cancelling processing
             processingProgress = 0.0
-            processingStatusText = "Preparing..."
+            processingStatusText = String(localized: "Preparing...")
         default:
             currentStep = .fileSelection
         }
@@ -422,7 +422,7 @@ class BatchPrintViewModel: ObservableObject {
         
         currentStep = .fileSelection
         processingProgress = 0.0
-        processingStatusText = "Preparing..."
+        processingStatusText = String(localized: "Preparing...")
     }
 }
 
@@ -551,13 +551,13 @@ struct BatchPrintView: View {
     private func navigationTitleForCurrentStep() -> String {
         switch viewModel.currentStep {
         case .fileSelection:
-            return "Batch Print"
+            return String(localized: "Batch Print")
         case .processing:
-            return "Processing Batch"
+            return String(localized: "Processing Batch")
         case .preview:
-            return viewModel.mergedDocumentName.isEmpty ? "Preview" : viewModel.mergedDocumentName
+            return viewModel.mergedDocumentName.isEmpty ? String(localized: "Preview") : viewModel.mergedDocumentName
         case .singleFilePreview:
-            return viewModel.fileForSinglePreview?.fileName ?? "Document"
+            return viewModel.fileForSinglePreview?.fileName ?? String(localized: "Document")
         }
     }
 }
@@ -606,12 +606,12 @@ struct BatchFileSelectionView: View {
                 }
                 
                 VStack(spacing: 8) {
-                    Text("Batch Print Documents")
+                    Text(String(localized: "Batch Print Documents"))
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
                     
-                    Text("Merge multiple PDFs and images into one document for easy printing")
+                    Text(String(localized: "Merge multiple PDFs and images into one document for easy printing"))
                         .font(.body)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -621,9 +621,9 @@ struct BatchFileSelectionView: View {
             
             // Features section
             VStack(spacing: 16) {
-                FeatureRowView(icon: "doc.text", title: "Merge PDFs", description: "Combine multiple PDF files")
-                FeatureRowView(icon: "photo", title: "Include Images", description: "Add JPEG, PNG, HEIC images")
-                FeatureRowView(icon: "printer", title: "Print All", description: "Print everything at once")
+                FeatureRowView(icon: "doc.text", title: String(localized: "Merge PDFs"), description: String(localized: "Combine multiple PDF files"))
+                FeatureRowView(icon: "photo", title: String(localized: "Include Images"), description: String(localized: "Add JPEG, PNG, HEIC images"))
+                FeatureRowView(icon: "printer", title: String(localized: "Print All"), description: String(localized: "Print everything at once"))
             }
             .padding(.horizontal, 30)
             
@@ -637,7 +637,7 @@ struct BatchFileSelectionView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "plus.circle.fill")
                             .font(.headline)
-                        Text("Select Files to Merge")
+                        Text(String(localized: "Select Files to Merge"))
                             .font(.headline.weight(.medium))
                     }
                     .frame(maxWidth: .infinity)
@@ -648,7 +648,7 @@ struct BatchFileSelectionView: View {
                 }
                 .padding(.horizontal, 30)
                 
-                Text("Supports up to 10 files")
+                Text(String(localized: "Supports up to 10 files"))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -663,11 +663,11 @@ struct BatchFileSelectionView: View {
             // Header with stats
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Selected Files")
+                    Text(String(localized: "Selected Files"))
                         .font(.headline)
                         .foregroundColor(.primary)
                     
-                    Text("\(viewModel.selectedFiles.count) files • \(totalPages) pages")
+                    Text(String(localized: "\(viewModel.selectedFiles.count) files • \(totalPages) pages"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -676,8 +676,8 @@ struct BatchFileSelectionView: View {
                 
                 // Quick stats
                 HStack(spacing: 16) {
-                    StatBadge(icon: "doc.fill", count: pdfCount, label: "PDFs")
-                    StatBadge(icon: "photo.fill", count: imageCount, label: "Images")
+                    StatBadge(icon: "doc.fill", count: pdfCount, label: String(localized: "PDFs"))
+                    StatBadge(icon: "photo.fill", count: imageCount, label: String(localized: "Images"))
                 }
             }
             .padding(.horizontal, 20)
@@ -702,52 +702,56 @@ struct BatchFileSelectionView: View {
             .listStyle(.plain)
             .padding(.top, 12)
             .animation(.default, value: viewModel.selectedFiles)
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
-                VStack(spacing: 0) {
-                    HStack(spacing: 20) {
-                        Button {
-                            viewModel.isShowingFilePicker = true
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: "plus")
-                                    .font(.subheadline)
-                                Text("Add (\(viewModel.selectedFiles.count)/\(viewModel.maxFiles))")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 10)
+            
+            // Bottom buttons section
+            VStack(spacing: 0) {
+                Divider()
+                HStack(spacing: 16) {
+                    Button {
+                        viewModel.isShowingFilePicker = true
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus")
+                                .font(.subheadline)
+                            Text("Add (\(viewModel.selectedFiles.count)/\(viewModel.maxFiles))")
+                                .font(.system(size: 13))
+                                .fontWeight(.medium)
+                                .lineLimit(1)
                         }
-                        .foregroundColor(.blue)
-                        .background(Color.blue.opacity(0.15))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .disabled(viewModel.selectedFiles.count >= viewModel.maxFiles)
-
-                        Spacer()
-
-                        Button {
-                            viewModel.startBatchPrintProcess()
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: "printer.fill")
-                                    .font(.caption)
-                                Text("Merge & Print")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                            }
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 10)
-                        }
-                        .foregroundColor(.white)
-                        .background(Color.blue)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .disabled(viewModel.selectedFiles.isEmpty)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .frame(minWidth: 100)
                     }
-                    .padding(.horizontal, 40) // Mucho más padding lateral
-                    .padding(.bottom, 12)
+                    .foregroundColor(.blue)
+                    .background(Color.blue.opacity(0.15))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .disabled(viewModel.selectedFiles.count >= viewModel.maxFiles)
+
+                    Spacer()
+
+                    Button {
+                        viewModel.startBatchPrintProcess()
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "printer.fill")
+                                .font(.system(size: 12))
+                            Text(String(localized: "Merge & Print"))
+                                .font(.system(size: 13))
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .frame(minWidth: 120)
+                    }
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .disabled(viewModel.selectedFiles.isEmpty)
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(Color(.systemBackground))
             }
         }
     }
@@ -850,7 +854,7 @@ struct FileRowView: View {
                     .foregroundColor(.primary)
                 
                 HStack(spacing: 8) {
-                    Text(fileItem.fileType == .image ? "Image" : "PDF")
+                    Text(fileItem.fileType == .image ? String(localized: "Image") : String(localized: "PDF"))
                         .font(.system(.caption2, design: .default))
                         .foregroundColor(.white)
                         .padding(.horizontal, 6)
@@ -858,7 +862,7 @@ struct FileRowView: View {
                         .background(fileItem.fileType.iconColor)
                         .clipShape(Capsule())
                     
-                    Text("\(fileItem.pageCount) page\(fileItem.pageCount == 1 ? "" : "s")")
+                    Text(String(localized: "\(fileItem.pageCount) page\(fileItem.pageCount == 1 ? "" : "s")"))
                         .font(.system(.caption, design: .default))
                         .foregroundColor(.secondary)
                     
@@ -904,7 +908,7 @@ struct BatchProcessingView: View {
     var body: some View {
         VStack(spacing: 20) {
             Spacer()
-            Text("Ready to Merge: \(viewModel.selectedFiles.count) file\(viewModel.selectedFiles.count == 1 ? "" : "s")")
+            Text(String(localized: "Ready to Merge: \(viewModel.selectedFiles.count) file\(viewModel.selectedFiles.count == 1 ? "" : "s")"))
                 .font(.title2.weight(.semibold))
                 .padding(.bottom)
 
@@ -928,9 +932,9 @@ struct BatchProcessingView: View {
             .padding(.bottom)
 
             VStack(alignment: .leading, spacing: 15) {
-                ProgressStepView(label: "1. Organizing Files", isChecked: viewModel.processingProgress >= 0.0)
-                ProgressStepView(label: "2. Converting & Merging", isChecked: viewModel.processingProgress >= 0.05 && viewModel.processingProgress < 0.85)
-                ProgressStepView(label: "3. Finalizing Document", isChecked: viewModel.processingProgress >= 0.85)
+                ProgressStepView(label: String(localized: "1. Organizing Files"), isChecked: viewModel.processingProgress >= 0.0)
+                ProgressStepView(label: String(localized: "2. Converting & Merging"), isChecked: viewModel.processingProgress >= 0.05 && viewModel.processingProgress < 0.85)
+                ProgressStepView(label: String(localized: "3. Finalizing Document"), isChecked: viewModel.processingProgress >= 0.85)
             }
             .padding(.horizontal)
             
@@ -946,7 +950,7 @@ struct BatchProcessingView: View {
                 .multilineTextAlignment(.center)
 
             Spacer()
-            Button("Cancel") { // This button cancels the processing
+            Button(String(localized: "Cancel")) { // This button cancels the processing
                 viewModel.returnToPreviousStep()
             }
             .padding(.bottom)
@@ -976,9 +980,9 @@ struct BatchPreviewView: View {
             } else {
                 VStack {
                     Spacer()
-                    ContentUnavailableView(title: "Preview Unavailable",
+                    ContentUnavailableView(title: String(localized: "Preview Unavailable"),
                                            systemImage: "doc.viewfinder.fill",
-                                           description: Text("The merged PDF could not be displayed."))
+                                           description: Text(String(localized: "The merged PDF could not be displayed.")))
                     Spacer()
                 }
             }
@@ -986,7 +990,7 @@ struct BatchPreviewView: View {
             Button {
                 handlePrintAction()
             } label: {
-                Text("Print Document")
+                Text(String(localized: "Print Document"))
                     .font(.headline)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
@@ -997,8 +1001,8 @@ struct BatchPreviewView: View {
             .padding(.bottom, 20)
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
-        .alert("Print Error", isPresented: $showingPrintError) {
-            Button("OK") { }
+        .alert(String(localized: "Print Error"), isPresented: $showingPrintError) {
+            Button(String(localized: "OK")) { }
         } message: {
             Text(printErrorMessage)
         }
@@ -1028,7 +1032,7 @@ struct BatchPreviewView: View {
     
     private func printDocument() {
         guard let url = viewModel.mergedDocumentURL else {
-            printErrorMessage = "No document available to print."
+            printErrorMessage = String(localized: "No document available to print.")
             showingPrintError = true
             return
         }
@@ -1040,7 +1044,7 @@ struct BatchPreviewView: View {
             if accessGranted {
                 url.stopAccessingSecurityScopedResource()
             }
-            printErrorMessage = "Could not load the document for printing."
+            printErrorMessage = String(localized: "Could not load the document for printing.")
             showingPrintError = true
             return
         }
@@ -1063,7 +1067,7 @@ struct BatchPreviewView: View {
             
             if let error = error {
                 DispatchQueue.main.async {
-                    printErrorMessage = "Print failed: \(error.localizedDescription)"
+                    printErrorMessage = String(localized: "Print failed: \(error.localizedDescription)")
                     showingPrintError = true
                 }
             } else if completed {
@@ -1114,9 +1118,9 @@ struct SingleFilePreviewView: View {
             } else {
                 VStack {
                     Spacer()
-                    ContentUnavailableView(title: "Document Unavailable",
+                    ContentUnavailableView(title: String(localized: "Document Unavailable"),
                                            systemImage: "doc.questionmark.fill",
-                                           description: Text("The selected document could not be displayed."))
+                                           description: Text(String(localized: "The selected document could not be displayed.")))
                     Spacer()
                 }
             }
@@ -1125,7 +1129,7 @@ struct SingleFilePreviewView: View {
                 Button {
                     handlePrintAction(for: file)
                 } label: {
-                    Text("Print This File")
+                    Text(String(localized: "Print This File"))
                         .font(.headline)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
@@ -1137,8 +1141,8 @@ struct SingleFilePreviewView: View {
             }
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
-        .alert("Print Error", isPresented: $showingPrintError) {
-            Button("OK") { }
+        .alert(String(localized: "Print Error"), isPresented: $showingPrintError) {
+            Button(String(localized: "OK")) { }
         } message: {
             Text(printErrorMessage)
         }
@@ -1170,7 +1174,7 @@ struct SingleFilePreviewView: View {
             if accessGranted {
                 file.url.stopAccessingSecurityScopedResource()
             }
-            printErrorMessage = "Could not load the document for printing."
+            printErrorMessage = String(localized: "Could not load the document for printing.")
             showingPrintError = true
             return
         }
@@ -1193,7 +1197,7 @@ struct SingleFilePreviewView: View {
             
             if let error = error {
                 DispatchQueue.main.async {
-                    printErrorMessage = "Print failed: \(error.localizedDescription)"
+                    printErrorMessage = String(localized: "Print failed: \(error.localizedDescription)")
                     showingPrintError = true
                 }
             } else if completed {

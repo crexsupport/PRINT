@@ -34,14 +34,14 @@ struct ImageToPDFSettingsView: View {
     private var imagesSummarySection: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("YOUR IMAGES")
+                Text(String(localized: "YOUR IMAGES"))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
                 
                 Spacer()
                 
-                Text("\(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s")")
+                Text(String(localized: "\(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s")"))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -79,7 +79,7 @@ struct ImageToPDFSettingsView: View {
     private var orientationSection: some View {
         VStack(spacing: 20) {
             HStack {
-                Text("ORIENTATION")
+                Text(String(localized: "ORIENTATION"))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
@@ -116,7 +116,7 @@ struct ImageToPDFSettingsView: View {
             // Info section about PDF settings
             VStack(spacing: 12) {
                 HStack {
-                    Text("PDF DETAILS")
+                    Text(String(localized: "PDF DETAILS"))
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
@@ -131,7 +131,7 @@ struct ImageToPDFSettingsView: View {
                             .foregroundColor(.blue)
                             .frame(width: 20)
                         
-                        Text("Format: A4 (210 × 297 mm)")
+                        Text(String(localized: "Format: A4 (210 × 297 mm)"))
                             .font(.system(size: 14))
                             .foregroundColor(.primary)
                         
@@ -144,7 +144,7 @@ struct ImageToPDFSettingsView: View {
                             .foregroundColor(.blue)
                             .frame(width: 20)
                         
-                        Text("Images will be centered and scaled to fit")
+                        Text(String(localized: "Images will be centered and scaled to fit"))
                             .font(.system(size: 14))
                             .foregroundColor(.primary)
                         
@@ -157,7 +157,7 @@ struct ImageToPDFSettingsView: View {
                             .foregroundColor(.blue)
                             .frame(width: 20)
                         
-                        Text("Aspect ratio preserved automatically")
+                        Text(String(localized: "Aspect ratio preserved automatically"))
                             .font(.system(size: 14))
                             .foregroundColor(.primary)
                         
@@ -181,7 +181,7 @@ struct ImageToPDFSettingsView: View {
             Button {
                 viewModel.generatePDF()
             } label: {
-                Text("Convert to PDF")
+                Text(String(localized: "Convert to PDF"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -214,7 +214,7 @@ struct ImageToPDFSettingsView: View {
                 Button {
                     viewModel.generatePDF()
                 } label: {
-                    Text("Convert to PDF")
+                    Text(String(localized: "Convert to PDF"))
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
@@ -296,14 +296,14 @@ struct OrientationPreviewView: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("PREVIEW")
+                Text(String(localized: "PREVIEW"))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
                 
                 Spacer()
                 
-                Text("A4 Paper")
+                Text(String(localized: "A4 Paper"))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -349,7 +349,7 @@ struct OrientationPreviewView: View {
             // Orientation info
             HStack(spacing: 16) {
                 VStack(spacing: 4) {
-                    Text("Width")
+                    Text(String(localized: "Width"))
                         .font(.caption2)
                         .foregroundColor(.secondary)
                     Text(orientation == .portrait ? "210mm" : "297mm")
@@ -363,7 +363,7 @@ struct OrientationPreviewView: View {
                     .foregroundColor(.gray)
                 
                 VStack(spacing: 4) {
-                    Text("Height")
+                    Text(String(localized: "Height"))
                         .font(.caption2)
                         .foregroundColor(.secondary)
                     Text(orientation == .portrait ? "297mm" : "210mm")

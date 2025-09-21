@@ -45,13 +45,13 @@ struct WebPagesView: View {
         }
         .actionSheet(isPresented: $showingPrintOptions) {
             ActionSheet(
-                title: Text("Print Options"),
-                message: Text("Choose how to print this web page"),
+                title: Text(String(localized: "Print Options")),
+                message: Text(String(localized: "Choose how to print this web page")),
                 buttons: [
-                    .default(Text("Print Current Page")) { handlePrintCurrentPage() },
-                    .default(Text("Print Full Website")) { handlePrintFullWebsite() },
-                    .default(Text("Save as PDF"))        { handleSaveAsPDF() },
-                    .cancel(Text("Cancel"))
+                    .default(Text(String(localized: "Print Current Page"))) { handlePrintCurrentPage() },
+                    .default(Text(String(localized: "Print Full Website"))) { handlePrintFullWebsite() },
+                    .default(Text(String(localized: "Save as PDF")))        { handleSaveAsPDF() },
+                    .cancel(Text(String(localized: "Cancel")))
                 ]
             )
         }
@@ -80,13 +80,13 @@ struct WebPagesView: View {
             // Clear the data after use
             pdfDataToSave = nil
         }
-        .alert("PDF Saved Successfully", isPresented: $showingSaveSuccess) {
-            Button("OK") { }
+        .alert(String(localized: "PDF Saved Successfully"), isPresented: $showingSaveSuccess) {
+            Button(String(localized: "OK")) { }
         } message: {
-            Text("Your webpage has been saved as a PDF to your chosen location.")
+            Text(String(localized: "Your webpage has been saved as a PDF to your chosen location."))
         }
-        .alert("Save Failed", isPresented: $showingSaveError) {
-            Button("OK") { }
+        .alert(String(localized: "Save Failed"), isPresented: $showingSaveError) {
+            Button(String(localized: "OK")) { }
         } message: {
             Text(saveErrorMessage)
         }
@@ -127,7 +127,7 @@ struct WebPagesView: View {
             pdfDataToSave = data
             showingFilePicker = true
         case .failure(let error):
-            saveErrorMessage = "Failed to generate PDF: \(error.localizedDescription)"
+            saveErrorMessage = String(localized: "Failed to generate PDF: \(error.localizedDescription)")
             showingSaveError = true
         }
         
@@ -172,7 +172,7 @@ private extension WebPagesView {
                 Spacer()
                 
                 VStack(spacing: 2) {
-                    Text("Browser")
+                    Text(String(localized: "Browser"))
                         .font(.system(size: 17, weight: .semibold))
                     
                     if webViewManager.isLoading {
@@ -197,7 +197,7 @@ private extension WebPagesView {
                     HStack(spacing: 4) {
                         Image(systemName: "printer.fill")
                             .font(.system(size: 14, weight: .medium))
-                        Text("Print")
+                        Text(String(localized: "Print"))
                             .font(.system(size: 16, weight: .medium))
                     }
                 }
@@ -242,7 +242,7 @@ private extension WebPagesView {
                                 )
                         }
                         
-                        TextField("Enter URL or search...", text: $webViewManager.urlString)
+                        TextField(String(localized: "Enter URL or search..."), text: $webViewManager.urlString)
                             .font(.system(size: 15, weight: .medium))
                             .textFieldStyle(.plain)
                             .keyboardType(.URL)
@@ -260,7 +260,7 @@ private extension WebPagesView {
                         Image(systemName: webViewManager.isDesktopMode ? "desktopcomputer" : "iphone")
                             .font(.system(size: 14, weight: .medium))
                         
-                        Text(webViewManager.isDesktopMode ? "Desktop" : "Mobile")
+                        Text(webViewManager.isDesktopMode ? String(localized: "Desktop") : String(localized: "Mobile"))
                             .font(.system(size: 13, weight: .medium))
                     }
                     .foregroundColor(webViewManager.isDesktopMode ? .blue : .gray)
@@ -291,19 +291,19 @@ private extension WebPagesView {
             Divider()
             HStack(spacing: 0) {
                 navButton(icon: "chevron.left",
-                          title: "Back",
+                          title: String(localized: "Back"),
                           enabled: webViewManager.canGoBack) {
                     webViewManager.goBack()
                 }
                 
                 navButton(icon: "chevron.right",
-                          title: "Forward",
+                          title: String(localized: "Forward"),
                           enabled: webViewManager.canGoForward) {
                     webViewManager.goForward()
                 }
                 
                 navButton(icon: "arrow.clockwise",
-                          title: "Reload",
+                          title: String(localized: "Reload"),
                           enabled: true) {
                     webViewManager.reload()
                 }

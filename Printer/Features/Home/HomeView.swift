@@ -15,12 +15,16 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
+                // Much closer to original white background
+                Color.white
+                    .ignoresSafeArea()
+                
                 // Main scrollable content
                 ScrollView {
                     VStack(spacing: 0) {
                         // Adjusted top padding for header with bottom padding
                         Spacer()
-                            .frame(height: 56) // Increased from 48 to account for header bottom padding
+                            .frame(height: 45) // Reduced from 56 to 40
                         
                         // Welcome banner immediately after header
                         if showWelcomeBanner {

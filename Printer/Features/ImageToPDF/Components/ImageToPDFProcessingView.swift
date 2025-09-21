@@ -26,11 +26,11 @@ struct ImageToPDFProcessingView: View {
             }
             
             VStack(spacing: 12) {
-                Text("Converting to PDF...")
+                Text(String(localized: "Converting to PDF..."))
                     .font(.title2)
                     .fontWeight(.semibold)
                 
-                Text("Processing \(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s") into PDF document")
+                Text(String(localized: "Processing \(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s") into PDF document"))
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)

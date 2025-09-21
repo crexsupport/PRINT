@@ -59,13 +59,13 @@ struct EnhancedDocumentCollectionView: View {
                 .environmentObject(subscriptionManager)
                 .interactiveDismissDisabled(true) // Disable swipe to dismiss
             }
-            .alert("Delete Document", isPresented: $showingDeleteAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Delete", role: .destructive) {
+            .alert(String(localized: "Delete Document"), isPresented: $showingDeleteAlert) {
+                Button(String(localized: "Cancel"), role: .cancel) { }
+                Button(String(localized: "Delete"), role: .destructive) {
                     deleteCurrentDocument()
                 }
             } message: {
-                Text("Are you sure you want to delete this document?")
+                Text(String(localized: "Are you sure you want to delete this document?"))
             }
         }
     }
@@ -151,7 +151,7 @@ struct DocumentReviewHeader: View {
             
             Spacer()
             
-            Text("Document Review")
+            Text(String(localized: "Document Review"))
                 .font(.headline)
                 .fontWeight(.semibold)
             
@@ -298,7 +298,7 @@ struct DocumentActionButtons: View {
     
     var body: some View {
         HStack(spacing: 20) {
-            Button("Add More") {
+            Button(String(localized: "Add More")) {
                 onAddMore()
             }
             .font(.headline)
@@ -310,7 +310,7 @@ struct DocumentActionButtons: View {
                     .stroke(Color.blue, lineWidth: 2)
             )
             
-            Button("Print(\(imageCount))") {
+            Button(String(localized: "Print(\(imageCount))")) {
                 onPrint()
             }
             .font(.headline)
@@ -335,16 +335,16 @@ struct DocumentEmptyState: View {
                 .font(.system(size: 50))
                 .foregroundColor(.gray)
             
-            Text("No documents scanned")
+            Text(String(localized: "No documents scanned"))
                 .font(.headline)
                 .foregroundColor(.gray)
             
-            Text("Capture some documents to see them here")
+            Text(String(localized: "Capture some documents to see them here"))
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
             
-            Button("Start Scanning") {
+            Button(String(localized: "Start Scanning")) {
                 onStartScanning()
             }
             .font(.headline)

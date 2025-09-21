@@ -9,10 +9,11 @@ import SwiftUI
 
 struct LabelCard: View {
     let template: LabelTemplate
+    @State private var showLabelCreation = false
     
     var body: some View {
         Button(action: {
-            // Label action
+            showLabelCreation = true
         }) {
             VStack(spacing: 8) {
                 Image(systemName: template.icon)
@@ -32,6 +33,9 @@ struct LabelCard: View {
             )
         }
         .buttonStyle(PlainButtonStyle())
+        .fullScreenCover(isPresented: $showLabelCreation) {
+            LabelCreationView()
+        }
     }
 }
 

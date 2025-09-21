@@ -53,7 +53,7 @@ struct PDFEditorPageSelectionView: View {
                             viewModel.selectAllPages()
                         }
                     } label: {
-                        Text(viewModel.selectedPagesCount == viewModel.pages.count ? "Deselect All" : "Select All")
+                        Text(viewModel.selectedPagesCount == viewModel.pages.count ? String(localized: "Deselect All") : String(localized: "Select All"))
                             .font(.system(size: 16, weight: .medium))
                     }
                     .foregroundColor(.blue)
@@ -67,7 +67,7 @@ struct PDFEditorPageSelectionView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "trash.fill")
                                 .font(.system(size: 14))
-                            Text("Delete (\(viewModel.selectedPagesCount))")
+                            Text(String(localized: "Delete (\(viewModel.selectedPagesCount))"))
                                 .font(.system(size: 16, weight: .semibold))
                         }
                         .foregroundColor(.white)
@@ -104,7 +104,7 @@ struct PDFEditorPageSelectionView: View {
     
     private var fileInfoSection: some View {
         VStack(spacing: 8) {
-            Text("YOUR FILE")
+            Text(String(localized: "YOUR FILE"))
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.secondary)
@@ -123,7 +123,7 @@ struct PDFEditorPageSelectionView: View {
                         .font(.system(size: 16, weight: .medium))
                         .lineLimit(1)
                     
-                    Text("\(viewModel.pages.count) pages")
+                    Text(String(localized: "\(viewModel.pages.count) pages"))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -137,13 +137,13 @@ struct PDFEditorPageSelectionView: View {
     
     private var instructionsSection: some View {
         VStack(spacing: 8) {
-            Text("CHOOSE UNWANTED PAGES")
+            Text(String(localized: "CHOOSE UNWANTED PAGES"))
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            Text("Tap pages to select them for deletion. Selected pages will be highlighted.")
+            Text(String(localized: "Tap pages to select them for deletion. Selected pages will be highlighted."))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)

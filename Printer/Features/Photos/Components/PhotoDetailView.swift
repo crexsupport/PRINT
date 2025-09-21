@@ -27,7 +27,7 @@ struct PhotoDetailView: View {
                             .scaleEffect(1.5)
                             .tint(.blue)
                         
-                        Text("Loading...")
+                        Text(String(localized: "Loading..."))
                             .foregroundColor(.gray)
                             .padding(.top)
                     }
@@ -107,7 +107,7 @@ struct PhotoDetailView: View {
                                 .transition(.scale.combined(with: .opacity))
                             }
                             
-                            Button("Done") {
+                            Button(String(localized: "Done")) {
                                 withAnimation(.easeInOut(duration: 0.2)) {
                                     if !viewModel.selectedPhotos.isEmpty {
                                         viewModel.currentStep = .photoPreview

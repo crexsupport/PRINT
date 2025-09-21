@@ -73,7 +73,7 @@ struct PhotoPreviewView: View {
     
     private var emptyStateView: some View {
         VStack {
-            Text("No photos selected")
+            Text(String(localized: "No photos selected"))
                 .font(.headline)
                 .foregroundColor(.gray)
         }
@@ -168,7 +168,7 @@ struct PhotoPreviewView: View {
     private var actionButtons: some View {
         HStack(spacing: 15) {
             // Add More button
-            Button("Add More") {
+            Button(String(localized: "Add More")) {
                 withAnimation(.easeInOut(duration: 0.1)) {
                     viewModel.currentStep = .photoSelection
                 }
@@ -186,7 +186,7 @@ struct PhotoPreviewView: View {
                     )
             )
             
-            Button("Print (\(selectedPhotos.count))") {
+            Button(String(localized: "Print (\(selectedPhotos.count))")) {
                 withAnimation(.easeInOut(duration: 0.1)) {
                     handlePrintAction()
                 }
@@ -312,7 +312,7 @@ struct PhotoDocumentPageView: View {
                         ProgressView()
                             .scaleEffect(1.2)
                             .tint(.blue)
-                        Text("Loading...")
+                        Text(String(localized: "Loading..."))
                             .font(.system(size: 15, weight: .medium))
                             .foregroundColor(.gray)
                     }

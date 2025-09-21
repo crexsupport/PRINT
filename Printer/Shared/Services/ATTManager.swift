@@ -2,7 +2,7 @@
 //  ATTManager.swift
 //  Printer
 //
-//  Created by AI Assistant on 18/6/25.
+//  Created by Pol on 18/6/25.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  PaywallManager.swift
 //  Printer
 //
-//  Created by AI Assistant on 17/6/25.
+//  Created by Pol on 17/6/25.
 //
 
 import SwiftUI

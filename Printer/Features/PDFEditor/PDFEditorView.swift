@@ -32,7 +32,7 @@ class PDFEditorViewModel: ObservableObject {
             guard let url = urls.first else { return }
             loadDocument(from: url)
         case .failure(let error):
-            errorMessage = "Failed to select document: \(error.localizedDescription)"
+            errorMessage = String(localized: "Failed to select document: \(error.localizedDescription)")
         }
     }
     
@@ -45,13 +45,13 @@ class PDFEditorViewModel: ObservableObject {
         }
         
         guard accessGranted else {
-            errorMessage = "Cannot access the selected file"
+            errorMessage = String(localized: "Cannot access the selected file")
             return
         }
         
         guard let document = PDFDocument(url: url) else {
             if url.isFileURL { url.stopAccessingSecurityScopedResource() }
-            errorMessage = "Invalid PDF document"
+            errorMessage = String(localized: "Invalid PDF document")
             return
         }
         
@@ -128,7 +128,7 @@ class PDFEditorViewModel: ObservableObject {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Failed to save the edited PDF"
+                    self.errorMessage = String(localized: "Failed to save the edited PDF")
                     self.isProcessing = false
                     self.currentStep = .pageSelection
                 }
@@ -240,8 +240,8 @@ struct PDFEditorView: View {
             allowsMultipleSelection: false,
             onCompletion: viewModel.selectDocument
         )
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
-            Button("OK") {
+        .alert(String(localized: "Error"), isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button(String(localized: "OK")) {
                 viewModel.errorMessage = nil
             }
         } message: {
@@ -278,13 +278,13 @@ struct PDFEditorView: View {
     private var navigationTitle: String {
         switch viewModel.currentStep {
         case .fileSelection:
-            return "Delete PDF Pages"
+            return String(localized: "Delete PDF Pages")
         case .pageSelection:
-            return "Select Pages to Delete"
+            return String(localized: "Select Pages to Delete")
         case .processing:
-            return "Processing..."
+            return String(localized: "Processing...")
         case .result:
-            return "PDF Edited"
+            return String(localized: "PDF Edited")
         }
     }
 }

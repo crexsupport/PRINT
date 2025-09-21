@@ -23,7 +23,7 @@ struct DocumentPreviewView: View {
                 Spacer()
                 
                 HStack(spacing: 20) {
-                    Button("Retake") {
+                    Button(String(localized: "Retake")) {
                         dismiss()
                     }
                     .font(.headline)
@@ -35,7 +35,7 @@ struct DocumentPreviewView: View {
                             .stroke(Color.blue, lineWidth: 2)
                     )
                     
-                    Button("Save") {
+                    Button(String(localized: "Save")) {
                         // Save document
                         onSave()
                     }
@@ -50,7 +50,7 @@ struct DocumentPreviewView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Document Preview")
+            .navigationTitle(String(localized: "Document Preview"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
         }

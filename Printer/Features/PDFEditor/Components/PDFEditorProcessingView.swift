@@ -26,11 +26,11 @@ struct PDFEditorProcessingView: View {
             }
             
             VStack(spacing: 12) {
-                Text("Deleting Pages...")
+                Text(String(localized: "Deleting Pages..."))
                     .font(.title2)
                     .fontWeight(.semibold)
                 
-                Text("Removing \(viewModel.selectedPagesCount) page\(viewModel.selectedPagesCount == 1 ? "" : "s") from your PDF")
+                Text(String(localized: "Removing \(viewModel.selectedPagesCount) page\(viewModel.selectedPagesCount == 1 ? "" : "s") from your PDF"))
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)

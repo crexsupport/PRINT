@@ -45,11 +45,11 @@ struct ImageToPDFSelectionView: View {
             
             // Title and description
             VStack(spacing: 12) {
-                Text("Image to PDF")
+                Text(String(localized: "Image to PDF"))
                     .font(.title2)
                     .fontWeight(.bold)
                 
-                Text("Convert multiple images into a single PDF document")
+                Text(String(localized: "Convert multiple images into a single PDF document"))
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -66,7 +66,7 @@ struct ImageToPDFSelectionView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 18))
-                    Text("Add Images")
+                    Text(String(localized: "Add Images"))
                         .font(.headline)
                 }
                 .foregroundColor(.white)
@@ -98,19 +98,19 @@ struct ImageToPDFSelectionView: View {
     private var headerSection: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("YOUR IMAGES")
+                Text(String(localized: "YOUR IMAGES"))
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
                 
                 Spacer()
                 
-                Text("\(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s")")
+                Text(String(localized: "\(viewModel.selectedImages.count) image\(viewModel.selectedImages.count == 1 ? "" : "s")"))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
             
-            Text("Drag to reorder images. They will appear in this order in the PDF.")
+            Text(String(localized: "Drag to reorder images. They will appear in this order in the PDF."))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -147,7 +147,7 @@ struct ImageToPDFSelectionView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "plus")
                             .font(.system(size: 14))
-                        Text("Add More")
+                        Text(String(localized: "Add More"))
                             .font(.system(size: 16, weight: .medium))
                     }
                     .foregroundColor(.blue)
@@ -162,7 +162,7 @@ struct ImageToPDFSelectionView: View {
                 Button {
                     viewModel.proceedToSettings()
                 } label: {
-                    Text("Convert")
+                    Text(String(localized: "Convert"))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 24)
@@ -196,7 +196,7 @@ struct ImageRowView: View {
             
             // Image info
             VStack(alignment: .leading, spacing: 2) {
-                Text("Image \(index + 1)")
+                Text(String(localized: "Image \(index + 1)"))
                     .font(.system(size: 16, weight: .medium))
                 
                 Text("\(Int(imageItem.image.size.width)) × \(Int(imageItem.image.size.height))")

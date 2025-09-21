@@ -13,67 +13,107 @@ struct MainTabView: View {
     @EnvironmentObject var subscriptionManager: SubscriptionManager
     @EnvironmentObject var paywallManager: PaywallManager
     
-    init() {
-        // Configure tab bar appearance with white background and elevation
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.white
-        
-        // Add shadow for elevation effect
-        appearance.shadowImage = UIImage()
-        appearance.shadowColor = UIColor.black.withAlphaComponent(0.1)
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-        
-        // Add layer shadow for better elevation effect
-        UITabBar.appearance().layer.shadowColor = UIColor.black.cgColor
-        UITabBar.appearance().layer.shadowOffset = CGSize(width: 0, height: -2)
-        UITabBar.appearance().layer.shadowOpacity = 0.1
-        UITabBar.appearance().layer.shadowRadius = 4
-    }
-    
     var body: some View {
-        TabView(selection: $selectedTab) {
-            // PANTALLA 1: Home - ICONOS SIN FILL
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
+        ZStack(alignment: .bottom) {
+            // Contenido principal
+            Group {
+                switch selectedTab {
+                case 0:
+                    HomeView()
+                case 1:
+                    PrintablesTabView()
+                case 2:
+                    LabelsTabView()
+                case 3:
+                    SettingsView()
+                default:
+                    HomeView()
                 }
-                .tag(0)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.bottom, 50) // Reducido aún más de 60 a 50
             
-            // PANTALLA 2: Photos - ICONOS SIN FILL
-            PhotosTabView()
-                .tabItem {
-                    Image(systemName: "photo")
-                    Text("Photos")
-                }
-                .tag(1)
-            
-            // PANTALLA 3: Text Notes
-            TextNotesTabView()
-                .tabItem {
-                    Image(systemName: selectedTab == 2 ? "note.text" : "note.text")
-                    Text("Text Notes")
-                }
-                .tag(2)
-            
-            // PANTALLA 4: Settings - ICONOS SIN FILL
-            SettingsView()
-                .tabItem {
-                    Image(systemName: "gearshape")
-                    Text("Settings")
-                }
-                .tag(3)
+            // Custom Bottom Navigation Bar
+            CustomBottomNavBar(selectedTab: $selectedTab)
         }
-        .accentColor(.blue)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .fullScreenCover(isPresented: $paywallManager.shouldShowPaywall) {
             PaywallView(onDismiss: {
                 paywallManager.shouldShowPaywall = false
             })
             .environmentObject(subscriptionManager)
         }
+    }
+}
+
+struct CustomBottomNavBar: View {
+    @Binding var selectedTab: Int
+    
+    private let tabs = [
+        (icon: "house", title: String(localized: "Home")),
+        (icon: "rectangle.grid.3x2", title: String(localized: "Printables")),
+        (icon: "tag", title: String(localized: "Labels")),
+        (icon: "gearshape", title: String(localized: "Settings"))
+    ]
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Línea separadora como el tab bar nativo
+            Rectangle()
+                .fill(Color(.separator))
+                .frame(height: 0.33)
+            
+            HStack(spacing: 0) {
+                ForEach(0..<tabs.count, id: \.self) { index in
+                    let tab = tabs[index]
+                    let isSelected = selectedTab == index
+                    
+                    Button(action: {
+                        selectedTab = index
+                    }) {
+                        VStack(spacing: 1) {
+                            // Icono
+                            Image(systemName: tab.icon)
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(isSelected ? .accentColor : Color(.systemGray))
+                            
+                            // Texto
+                            Text(tab.title)
+                                .font(.system(size: 10, weight: .regular))
+                                .foregroundColor(isSelected ? .accentColor : Color(.systemGray))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.top, 4)
+            .background(
+                Color(.systemBackground)
+                    .background(.regularMaterial, in: Rectangle()) // Efecto blur nativo
+            )
+        }
+        .background(Color(.systemBackground))
+        .frame(maxWidth: .infinity)
+        .edgesIgnoringSafeArea(.bottom)
+    }
+}
+
+// Wrapper para Printables sin header
+struct PrintablesTabView: View {
+    var body: some View {
+        PrintablesView(showHeader: false)
+    }
+}
+
+// Wrapper para Labels sin header  
+struct LabelsTabView: View {
+    var body: some View {
+        LabelCreationView(showHeader: false)
     }
 }
 
@@ -139,7 +179,7 @@ struct TextNotesMainView: View {
                     Spacer()
                     
                     // Invisible button for balance
-                    Button("Edit") {
+                    Button(String(localized: "Edit")) {
                         // Empty action
                     }
                     .opacity(0)

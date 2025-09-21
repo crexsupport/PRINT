@@ -9,10 +9,10 @@ import SwiftUI
 
 struct FeaturesSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 6) {
             // Header con título e indicador integrado
             HStack {
-                Text("Features")
+                Text(String(localized: "Features"))
                     .font(.headline)
                     .fontWeight(.semibold)
                 
@@ -55,7 +55,7 @@ struct InnovativePageIndicator: View {
                     .scaleEffect(1.1)
                     .animation(.spring(response: 0.4, dampingFraction: 0.7), value: currentPage)
                 
-                Text("of")
+                Text(String(localized: "of"))
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 

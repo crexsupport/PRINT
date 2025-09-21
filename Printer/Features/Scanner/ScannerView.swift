@@ -29,7 +29,7 @@ struct ScannerView: View {
                 VStack {
                     // Top controls
                     HStack {
-                        Button("Cancel") {
+                        Button(String(localized: "Cancel")) {
                             dismiss()
                         }
                         .foregroundColor(.white)
@@ -49,7 +49,7 @@ struct ScannerView: View {
                         Spacer()
                         
                         // Scan mode toggle
-                        Button(isManualMode ? "Manual" : "Auto") {
+                        Button(isManualMode ? String(localized: "Manual") : String(localized: "Auto")) {
                             isManualMode.toggle()
                             scannerManager.setScanMode(manual: isManualMode)
                         }
@@ -68,15 +68,15 @@ struct ScannerView: View {
                             
                             VStack(spacing: 8) {
                                 if scannerManager.autoCaptureCooldown {
-                                    Text("Capturing in 2 seconds...")
+                                    Text(String(localized: "Capturing in 2 seconds..."))
                                         .font(.system(size: 16, weight: .medium))
                                         .foregroundColor(.white)
                                 } else {
-                                    Text("Document detected!")
+                                    Text(String(localized: "Document detected!"))
                                         .font(.system(size: 16, weight: .medium))
                                         .foregroundColor(.white)
                                     
-                                    Text("Hold steady for auto capture")
+                                    Text(String(localized: "Hold steady for auto capture"))
                                         .font(.system(size: 14))
                                         .foregroundColor(.white.opacity(0.8))
                                 }
@@ -156,7 +156,7 @@ struct ScannerView: View {
                                 self.showingPreview = true
                             }
                         }) {
-                            Text(scannerManager.capturedCount > 0 ? "Review (\(scannerManager.capturedCount))" : "Scan")
+                            Text(scannerManager.capturedCount > 0 ? String(localized: "Review (\(scannerManager.capturedCount))") : String(localized: "Scan"))
                                 .font(.system(size: 17, weight: .medium))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 20)
@@ -182,18 +182,18 @@ struct ScannerView: View {
                         .font(.system(size: 50))
                         .foregroundColor(.gray)
                     
-                    Text("Camera Access Required")
+                    Text(String(localized: "Camera Access Required"))
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                     
-                    Text("Allow camera access to scan documents and take photos to add to your printables.")
+                    Text(String(localized: "Allow camera access to scan documents and take photos to add to your printables."))
                         .font(.body)
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
                     
-                    Button("Allow Camera Access") {
+                    Button(String(localized: "Allow Camera Access")) {
                         scannerManager.requestCameraPermission()
                     }
                     .font(.headline)

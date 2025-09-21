@@ -11,13 +11,13 @@ struct PhotoPermissionView: View {
             VStack(spacing: 24) {
                 Spacer()
                 
-                Text("Allow Printer to access your gallery in \"Settings > Privacy > Photos\"")
+                Text(String(localized: "Allow Printer to access your gallery in \"Settings > Privacy > Photos\""))
                     .font(.system(size: 17, weight: .regular))
                     .foregroundColor(.primary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
                 
-                Button("Settings") {
+                Button(String(localized: "Settings")) {
                     viewModel.openSettings()
                 }
                 .font(.system(size: 17, weight: .regular))

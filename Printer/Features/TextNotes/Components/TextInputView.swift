@@ -244,7 +244,7 @@ struct TypewriterPlaceholder: View {
     @State private var showCursor = true
     @State private var hasCompleted = false
     
-    private let fullText = "Start typing your document here..."
+    private let fullText = String(localized: "Start typing your document here...")
     
     var body: some View {
         HStack {

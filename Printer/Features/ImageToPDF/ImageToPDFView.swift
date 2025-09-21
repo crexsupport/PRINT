@@ -20,15 +20,15 @@ enum PDFOrientation: CaseIterable {
     
     var title: String {
         switch self {
-        case .portrait: return "Portrait"
-        case .landscape: return "Landscape"
+        case .portrait: return String(localized: "Portrait")
+        case .landscape: return String(localized: "Landscape")
         }
     }
     
     var description: String {
         switch self {
-        case .portrait: return "Taller than wide"
-        case .landscape: return "Wider than tall"
+        case .portrait: return String(localized: "Taller than wide")
+        case .landscape: return String(localized: "Wider than tall")
         }
     }
     
@@ -72,13 +72,13 @@ class ImageToPDFViewModel: ObservableObject {
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            self.errorMessage = "Failed to load image: \(error.localizedDescription)"
+                            self.errorMessage = String(localized: "Failed to load image: \(error.localizedDescription)")
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.errorMessage = "Failed to select image: \(error.localizedDescription)"
+                    self.errorMessage = String(localized: "Failed to select image: \(error.localizedDescription)")
                 }
             }
         }
@@ -131,7 +131,7 @@ class ImageToPDFViewModel: ObservableObject {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Failed to generate PDF"
+                    self.errorMessage = String(localized: "Failed to generate PDF")
                     self.isProcessing = false
                     self.currentStep = .settings
                 }
@@ -275,8 +275,8 @@ struct ImageToPDFView: View {
                 }
             }
         }
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
-            Button("OK") {
+        .alert(String(localized: "Error"), isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button(String(localized: "OK")) {
                 viewModel.errorMessage = nil
             }
         } message: {
@@ -313,13 +313,13 @@ struct ImageToPDFView: View {
     private var navigationTitle: String {
         switch viewModel.currentStep {
         case .imageSelection:
-            return "Image to PDF"
+            return String(localized: "Image to PDF")
         case .settings:
-            return "PDF Settings"
+            return String(localized: "PDF Settings")
         case .processing:
-            return "Converting..."
+            return String(localized: "Converting...")
         case .result:
-            return "PDF Generated"
+            return String(localized: "PDF Generated")
         }
     }
 }

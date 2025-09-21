@@ -34,17 +34,17 @@ struct ImageToPDFResultView: View {
         ) { result in
             switch result {
             case .success(let url):
-                saveAlertMessage = "PDF saved successfully to \(url.lastPathComponent)"
+                saveAlertMessage = String(localized: "PDF saved successfully to \(url.lastPathComponent)")
                 showingSaveAlert = true
                 print("PDF saved to: \(url)")
             case .failure(let error):
-                saveAlertMessage = "Failed to save PDF: \(error.localizedDescription)"
+                saveAlertMessage = String(localized: "Failed to save PDF: \(error.localizedDescription)")
                 showingSaveAlert = true
                 print("Save error: \(error)")
             }
         }
-        .alert("Save Status", isPresented: $showingSaveAlert) {
-            Button("OK", role: .cancel) { }
+        .alert(String(localized: "Save Status"), isPresented: $showingSaveAlert) {
+            Button(String(localized: "OK"), role: .cancel) { }
         } message: {
             Text(saveAlertMessage)
         }
@@ -67,12 +67,12 @@ struct ImageToPDFResultView: View {
             // Preview header
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("PREVIEW")
+                    Text(String(localized: "PREVIEW"))
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
                     
-                    Text("PDF Document")
+                    Text(String(localized: "PDF Document"))
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -124,7 +124,7 @@ struct ImageToPDFResultView: View {
                             .foregroundColor(.white)
                     }
                     
-                    Text("Print PDF")
+                    Text(String(localized: "Print PDF"))
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -146,7 +146,7 @@ struct ImageToPDFResultView: View {
             Button {
                 viewModel.resetToImageSelection()
             } label: {
-                Text("Convert More Images")
+                Text(String(localized: "Convert More Images"))
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.blue)
                     .frame(maxWidth: .infinity)
@@ -161,7 +161,7 @@ struct ImageToPDFResultView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "folder.badge.plus")
                         .font(.system(size: 14, weight: .medium))
-                    Text("Save to Files")
+                    Text(String(localized: "Save to Files"))
                         .font(.system(size: 16, weight: .medium))
                 }
                 .foregroundColor(.blue)
@@ -204,7 +204,7 @@ struct ImageToPDFResultView: View {
         let printController = UIPrintInteractionController.shared
         let printInfo = UIPrintInfo(dictionary: nil)
         printInfo.outputType = .general
-        printInfo.jobName = "Images PDF"
+        printInfo.jobName = String(localized: "Images PDF")
         
         printController.printInfo = printInfo
         printController.printingItem = url
@@ -232,7 +232,7 @@ struct ImageToPDFResultView: View {
             print("Created persistent copy at: \(persistentURL)")
             
         } catch {
-            saveAlertMessage = "Failed to prepare PDF for saving: \(error.localizedDescription)"
+            saveAlertMessage = String(localized: "Failed to prepare PDF for saving: \(error.localizedDescription)")
             showingSaveAlert = true
             print("Failed to create persistent copy: \(error)")
         }
@@ -378,7 +378,7 @@ struct SmartPDFPreviewView: View {
             }
             .disabled(currentPage <= 0)
             
-            Text("Page \(currentPage + 1) of \(pageCount)")
+            Text(String(localized: "Page \(currentPage + 1) of \(pageCount)"))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.secondary)
             
@@ -404,7 +404,7 @@ struct SmartPDFPreviewView: View {
         HStack(spacing: 0) {
             StatItemView(
                 icon: "doc.text",
-                title: "Pages",
+                title: String(localized: "Pages"),
                 value: "\(pageCount)"
             )
             
@@ -414,8 +414,8 @@ struct SmartPDFPreviewView: View {
             
             StatItemView(
                 icon: "rectangle.portrait",
-                title: "Format",
-                value: "A4"
+                title: String(localized: "Format"),
+                value: String(localized: "A4")
             )
             
             Divider()
@@ -424,7 +424,7 @@ struct SmartPDFPreviewView: View {
             
             StatItemView(
                 icon: orientation.icon,
-                title: "Size",
+                title: String(localized: "Size"),
                 value: orientation.title
             )
         }

@@ -32,7 +32,7 @@ struct SelectedPhotosCarouselView: View {
             } else {
                 // Empty state
                 VStack {
-                    Text("No photos selected")
+                    Text(String(localized: "No photos selected"))
                         .foregroundColor(.white)
                         .font(.headline)
                 }
@@ -132,7 +132,7 @@ struct SelectedPhotosCarouselView: View {
                                 }
                             }
                             
-                            Button("Done") {
+                            Button(String(localized: "Done")) {
                                 if !selectedPhotos.isEmpty {
                                     viewModel.currentStep = .photoPreview
                                 }
@@ -204,7 +204,7 @@ struct SelectedPhotoCarouselItem: View {
                         .scaleEffect(1.5)
                         .tint(.gray)
                     
-                    Text("Loading...")
+                    Text(String(localized: "Loading..."))
                         .foregroundColor(.gray)
                         .padding(.top)
                 }

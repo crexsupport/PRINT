@@ -13,7 +13,7 @@ struct PhotoSelectionView: View {
             if viewModel.isLoadingPhotos {
                 VStack {
                     Spacer()
-                    ProgressView("Loading photos...")
+                    ProgressView(String(localized: "Loading photos..."))
                         .tint(.blue)
                     Spacer()
                 }
@@ -47,7 +47,7 @@ struct PhotoSelectionView: View {
                             .background(Color(.systemGray4))
                         
                         HStack(spacing: 15) {
-                            Button("Preview") {
+                            Button(String(localized: "Preview")) {
                                 withAnimation(.easeInOut(duration: 0.1)) {
                                     showingSelectedPhotosCarousel = true
                                 }
@@ -67,7 +67,7 @@ struct PhotoSelectionView: View {
                             .scaleEffect(1.0)
                             .animation(.easeInOut(duration: 0.08), value: viewModel.selectedPhotos.count)
                             
-                            Button("Print(\(viewModel.selectedPhotos.count))") {
+                            Button(String(localized: "Print(\(viewModel.selectedPhotos.count))")) {
                                 withAnimation(.easeInOut(duration: 0.1)) {
                                     viewModel.currentStep = .photoPreview
                                 }

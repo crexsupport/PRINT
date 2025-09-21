@@ -72,13 +72,13 @@ struct SelectDocumentView: View {
                 .foregroundColor(colorScheme == .dark ? .blue.opacity(0.8) : .blue)
                 .padding(.bottom, 15)
             
-            Text("No document selected")
+            Text(String(localized: "No document selected"))
                 .font(.title2)
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primary)
             
-            Text("Select a document to view, print, or share.")
+            Text(String(localized: "Select a document to view, print, or share."))
                 .font(.body)
                 .fontWeight(.regular)
                 .multilineTextAlignment(.center)
@@ -88,7 +88,7 @@ struct SelectDocumentView: View {
             Button {
                 viewModel.isShowingFileImporter = true
             } label: {
-                Label("Select Document", systemImage: "plus.circle.fill")
+                Label(String(localized: "Select Document"), systemImage: "plus.circle.fill")
                     .font(.headline.weight(.medium))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
@@ -103,7 +103,7 @@ struct SelectDocumentView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
-        .navigationTitle("Documents")
+        .navigationTitle(String(localized: "Documents"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -127,7 +127,7 @@ struct SelectDocumentView: View {
                 if let firstUrl = urls.first {
                     viewModel.selectFile(from: .success(firstUrl))
                 } else {
-                    viewModel.selectFile(from: .failure(NSError(domain: "FileImporter", code: 0, userInfo: [NSLocalizedDescriptionKey: "No file selected."])))
+                    viewModel.selectFile(from: .failure(NSError(domain: "FileImporter", code: 0, userInfo: [NSLocalizedDescriptionKey: String(localized: "No file selected.")])))
                 }
             case .failure(let error):
                 viewModel.selectFile(from: .failure(error))
@@ -176,7 +176,7 @@ struct DocumentDisplayView: View {
             Button {
                 print("Printing single document: \(document.fileName)")
             } label: {
-                Text("Print Document")
+                Text(String(localized: "Print Document"))
                     .font(.headline)
                     .padding(.horizontal, 30)
                     .padding(.vertical, 12)
@@ -201,7 +201,7 @@ struct DocumentDisplayView: View {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 ShareLink(item: document.url,
                           subject: Text(document.fileName),
-                          message: Text("Check out this document: \(document.fileName)"),
+                          message: Text(String(localized: "Check out this document: \(document.fileName)")),
                           preview: SharePreview(document.fileName, image: Image(systemName: "doc.fill"))) {
                     Image(systemName: "square.and.arrow.up")
                 }

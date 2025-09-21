@@ -9,37 +9,37 @@ struct HelpTipView: View {
 
     private let tips = [
         HelpTip(
-            title: "Wi-Fi Connection Required",
-            description: "Make sure your printer and device are connected to the same Wi-Fi network for best results.",
-            icon: "wifi",
-            color: .blue,
-            gradient: [Color.blue, Color.cyan]
+            title: String(localized: "Wi-Fi Connection Required"),
+            description: String(localized: "Make sure your printer and device are connected to the same Wi-Fi network for best results."),
+            icon: "network",
+            color: Color(red: 0.15, green: 0.4, blue: 0.8),
+            gradient: [Color(red: 0.3, green: 0.6, blue: 0.95), Color(red: 0.15, green: 0.4, blue: 0.8)]
         ),
         HelpTip(
-            title: "Scan Multiple Pages",
-            description: "Tap and hold the scan button to activate batch scanning mode for multiple documents.",
-            icon: "camera.viewfinder",
-            color: .green,
-            gradient: [Color.green, Color.mint]
+            title: String(localized: "Scan Multiple Pages"),
+            description: String(localized: "Tap and hold the scan button to activate batch scanning mode for multiple documents."),
+            icon: "doc.on.doc",
+            color: Color(red: 0.15, green: 0.7, blue: 0.3),
+            gradient: [Color(red: 0.3, green: 0.85, blue: 0.5), Color(red: 0.15, green: 0.7, blue: 0.3)]
         ),
         HelpTip(
-            title: "Save Paper",
-            description: "Use the preview feature to check your document before printing to avoid waste.",
-            icon: "leaf.fill",
-            color: .green,
-            gradient: [Color.green, Color.yellow]
+            title: String(localized: "Save Paper"),
+            description: String(localized: "Use the preview feature to check your document before printing to avoid waste."),
+            icon: "folder",
+            color: Color(red: 0.9, green: 0.5, blue: 0.15),
+            gradient: [Color(red: 1.0, green: 0.7, blue: 0.3), Color(red: 0.9, green: 0.5, blue: 0.15)]
         ),
         HelpTip(
-            title: "Print Quality",
-            description: "Adjust print quality settings in each feature to optimize for your specific needs.",
-            icon: "slider.horizontal.3",
-            color: .purple,
-            gradient: [Color.purple, Color.pink]
+            title: String(localized: "Print Quality"),
+            description: String(localized: "Adjust print quality settings in each feature to optimize for your specific needs."),
+            icon: "doc.text",
+            color: Color(red: 0.6, green: 0.15, blue: 0.8),
+            gradient: [Color(red: 0.75, green: 0.3, blue: 0.95), Color(red: 0.6, green: 0.15, blue: 0.8)]
         )
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 ZStack {
                     Circle()
@@ -55,11 +55,11 @@ struct HelpTipView: View {
                                 endRadius: 20
                             )
                         )
-                        .frame(width: 32, height: 32)
+                        .frame(width: 28, height: 28)
                         .scaleEffect(showGlow ? 1.2 : 1.0)
 
                     Image(systemName: "lightbulb.fill")
-                        .font(.system(size: 18, weight: .medium))
+                        .font(.system(size: 16, weight: .medium))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.yellow, .orange],
@@ -70,7 +70,7 @@ struct HelpTipView: View {
                         .shadow(color: .yellow.opacity(0.3), radius: 4)
                 }
 
-                Text("Helpful Tips")
+                Text(String(localized: "Helpful Tips"))
                     .font(.system(.headline, design: .rounded, weight: .semibold))
                     .foregroundColor(.primary)
 
@@ -187,7 +187,7 @@ struct InnovativeHelpTipIndicator: View {
                 .scaleEffect(1.1)
                 .animation(.spring(response: 0.4, dampingFraction: 0.7), value: currentIndex)
             
-            Text("of")
+            Text(String(localized: "of"))
                 .font(.caption2)
                 .foregroundColor(.secondary)
             
@@ -231,29 +231,25 @@ struct HelpTip {
 struct ModernTipCard: View {
     let tip: HelpTip
     @Binding var isPressed: Bool
-    @State private var animateIcon = false
     @State private var showContent = false
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.3),
-                                    Color.white.opacity(0.1),
-                                    tip.color.opacity(0.1)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 1
-                        )
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: Color.white, location: 0.0),
+                            .init(color: Color.white, location: 0.97),
+                            .init(color: Color.gray.opacity(0.05), location: 1.0)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
-                .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
+                .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+                .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 5)
+                .shadow(color: Color.black.opacity(0.04), radius: 3, x: 0, y: 2)
 
             RoundedRectangle(cornerRadius: 16)
                 .fill(
@@ -268,43 +264,27 @@ struct ModernTipCard: View {
                     )
                 )
 
-            HStack(spacing: 16) {
-                ZStack {
-                    Circle()
-                        .fill(
-                            RadialGradient(
-                                colors: [
-                                    tip.color.opacity(0.2),
-                                    tip.color.opacity(0.1),
-                                    Color.clear
-                                ],
-                                center: .center,
-                                startRadius: 0,
-                                endRadius: 30
+            HStack(spacing: 14) {
+                // Icono profesional estilo paywall con degradado sutil
+                Image(systemName: tip.icon)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.white)
+                    .frame(width: 34, height: 34)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        tip.color.opacity(0.9),  // Ligeramente más claro arriba
+                                        tip.color                // Color completo abajo (más oscuro)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
                             )
-                        )
-                        .frame(width: 56, height: 56)
-                        .scaleEffect(animateIcon ? 1.1 : 1.0)
+                    )
 
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: tip.gradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 44, height: 44)
-                        .shadow(color: tip.color.opacity(0.3), radius: 8, x: 0, y: 4)
-
-                    Image(systemName: tip.icon)
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(.white)
-                        .scaleEffect(animateIcon ? 1.05 : 1.0)
-                        .rotationEffect(.degrees(animateIcon ? 5 : -5))
-                }
-
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text(tip.title)
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundColor(.primary)
@@ -332,16 +312,12 @@ struct ModernTipCard: View {
                 .opacity(showContent ? 0.6 : 0)
                 .scaleEffect(isPressed ? 1.2 : 1.0)
             }
-            .padding(16)
+            .padding(14)
         }
         .scaleEffect(isPressed ? 0.98 : 1.0)
         .onAppear {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 showContent = true
-            }
-
-            withAnimation(.easeInOut(duration: 2.5).repeatForever(autoreverses: true)) {
-                animateIcon = true
             }
         }
     }
@@ -350,5 +326,5 @@ struct ModernTipCard: View {
 #Preview {
     HelpTipView()
         .padding()
-        .background(Color(.systemGroupedBackground))
+        .background(Color.white)
 }
