@@ -35,13 +35,6 @@ struct OnboardingView: View {
             subtitle: "",
             description: String(localized: "Connect to any printer instantly. No setup required, just print and go."),
             isReview: false
-        ),
-        OnboardingPage(
-            image: "",
-            title: String(localized: "Love Printer?"),
-            subtitle: "",
-            description: String(localized: "Join thousands of professionals who trust our printing solutions for their daily workflow needs."),
-            isReview: true
         )
     ]
     

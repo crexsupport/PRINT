@@ -14646,6 +14646,7 @@
       }
     },
     "Join thousands of professionals who trust our printing solutions for their daily workflow needs." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

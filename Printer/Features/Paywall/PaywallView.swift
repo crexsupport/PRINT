@@ -196,9 +196,11 @@ struct PaywallView: View {
         .task {
             await subscriptionManager.loadProducts()
             startRotationTimer()
-            withAnimation(.easeInOut(duration: 0.3)) { showCloseButton = true }
         }
         .onAppear {
+            // Show close button immediately without delay
+            withAnimation(.easeInOut(duration: 0.3)) { showCloseButton = true }
+            
             if printerPositions.isEmpty { generateStaticPrinterPositions() }
             // Ensure selectedProductIndex reflects trial state on appear
             if hasTrialEnabled && subscriptionManager.weeklyTrialProduct != nil {

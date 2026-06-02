@@ -242,6 +242,7 @@ struct DocumentViewerModal: View {
     @State private var hasAccessToFile = false
     @State private var showingPrintAlert = false
     @State private var printAlertMessage = ""
+    @Environment(\.requestReview) private var requestReview
     
     var body: some View {
         NavigationView {
@@ -265,6 +266,7 @@ struct DocumentViewerModal: View {
                     }
                 }
                 .onAppear {
+                    print("🟢 DocumentViewerModal appeared - showing document: \(documentURL.lastPathComponent)")
                     if documentURL.isFileURL {
                         hasAccessToFile = documentURL.startAccessingSecurityScopedResource()
                         if !hasAccessToFile {
@@ -275,6 +277,7 @@ struct DocumentViewerModal: View {
                     }
                 }
                 .onDisappear {
+                    print("🔴 DocumentViewerModal disappeared")
                     if documentURL.isFileURL && hasAccessToFile {
                         documentURL.stopAccessingSecurityScopedResource()
                         hasAccessToFile = false
@@ -282,6 +285,7 @@ struct DocumentViewerModal: View {
                 }
                 
                 Button {
+                    print("🖨️ PRINT DOCUMENT BUTTON PRESSED! - This is the FREE Documents function")
                     printDocument()
                 } label: {
                     Text(String(localized: "Print Document"))
@@ -325,7 +329,11 @@ struct DocumentViewerModal: View {
     }
     
     private func printDocument() {
+        print("🎯 printDocument() called - Starting FREE document print")
         print("Attempting to print document: \(documentURL.lastPathComponent)")
+        
+        // Track free document print BEFORE attempting to print
+        trackFreeDocumentPrint()
         
         // Check if printing is available
         guard UIPrintInteractionController.isPrintingAvailable else {
@@ -345,22 +353,76 @@ struct DocumentViewerModal: View {
         printController.printInfo = printInfo
         printController.printingItem = documentURL
         
-        // Present the print interface
-        printController.present(animated: true) { (controller, completed, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print("Print error: \(error.localizedDescription)")
-                    self.printAlertMessage = String(localized: "Print failed: \(error.localizedDescription)")
-                    self.showingPrintAlert = true
-                } else if completed {
-                    print("Print job completed successfully")
-                    self.printAlertMessage = String(localized: "Document sent to printer successfully!")
-                    self.showingPrintAlert = true
-                } else {
-                    print("Print job was cancelled")
-                    // Don't show alert for cancellation
+        // FIX: Present on main thread with delay to avoid presentation conflicts
+        DispatchQueue.main.async {
+            // Find the topmost view controller
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first,
+                  let rootViewController = window.rootViewController else {
+                print("Could not find root view controller")
+                return
+            }
+            
+            var topController = rootViewController
+            while let presentedController = topController.presentedViewController {
+                topController = presentedController
+            }
+            
+            // Present from the topmost controller
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                // iPad - use popover presentation
+                printController.present(from: CGRect(x: window.bounds.midX, y: window.bounds.midY, width: 0, height: 0), in: topController.view, animated: true) { (controller, completed, error) in
+                    self.handlePrintResult(completed: completed, error: error)
+                }
+            } else {
+                // iPhone - use sheet presentation
+                printController.present(animated: true) { (controller, completed, error) in
+                    self.handlePrintResult(completed: completed, error: error)
                 }
             }
+        }
+    }
+    
+    private func handlePrintResult(completed: Bool, error: Error?) {
+        DispatchQueue.main.async {
+            if let error = error {
+                print("Print error: \(error.localizedDescription)")
+                self.printAlertMessage = String(localized: "Print failed: \(error.localizedDescription)")
+                self.showingPrintAlert = true
+            } else if completed {
+                print("Print job completed successfully")
+                self.printAlertMessage = String(localized: "Document sent to printer successfully!")
+                self.showingPrintAlert = true
+            } else {
+                print("Print job was cancelled")
+                // Don't show alert for cancellation
+            }
+        }
+    }
+    
+    private func trackFreeDocumentPrint() {
+        print("📊 trackFreeDocumentPrint() called for FREE Documents feature")
+        let freeDocumentPrintCountKey = "freeDocumentPrintCount"
+        let hasShownDocumentRatingKey = "hasShownDocumentRating"
+        
+        let currentCount = UserDefaults.standard.integer(forKey: freeDocumentPrintCountKey) + 1
+        UserDefaults.standard.set(currentCount, forKey: freeDocumentPrintCountKey)
+        
+        let hasShownRating = UserDefaults.standard.bool(forKey: hasShownDocumentRatingKey)
+        
+        print("📈 Current free document print count: \(currentCount)")
+        print("⭐ Has shown rating before: \(hasShownRating)")
+        
+        // Show rating after 4th free document print, only once per user
+        if currentCount == 4 && !hasShownRating {
+            print("🎉 CONDITIONS MET! Showing rating prompt after 4th FREE Documents print")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.requestReview()
+                UserDefaults.standard.set(true, forKey: hasShownDocumentRatingKey)
+                print("⭐ RATING PROMPT SHOWN! Marked as completed for Documents feature.")
+            }
+        } else {
+            print("❌ Rating conditions not met - Count: \(currentCount), HasShown: \(hasShownRating)")
         }
     }
 }
